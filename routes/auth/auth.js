@@ -65,6 +65,9 @@ router.post("/signup", authSignup, async (req, res) => {
       user: "tranngocthang.bkdn@gmail.com",
       pass: "tranngocthang",
     },
+    tls: {
+      rejectUnauthorized: false,
+    },
   });
 
   const mailOptions = {

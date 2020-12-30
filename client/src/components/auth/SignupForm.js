@@ -19,10 +19,8 @@ const SignupForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setButtonText("Signing...");
-    dispatch(signup(userData)).then((unwrapResult) => {
-      if (unwrapResult.meta.requestStatus === "fulfilled") {
-        setButtonText("Signup");
-      }
+    dispatch(signup(userData)).then(() => {
+      setButtonText("Signup");
     });
   };
   return (
