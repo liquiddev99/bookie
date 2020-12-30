@@ -15,7 +15,7 @@ router.get(
 router.get("/google/callback", passport.authenticate("google"), (req, res) => {
   console.log(req.user, "user");
   const { email, username } = req.user;
-  const token = jwt.sign({ username, email }, keys.SESSION.JWT_Secret, {
+  const token = jwt.sign({ username, email }, keys.JWT_Secret, {
     expiresIn: "1d",
   });
   res.cookie("usersession", token, { maxAge: 24 * 60 * 60 * 1000 });
@@ -28,7 +28,7 @@ router.get(
   passport.authenticate("facebook"),
   (req, res) => {
     const { username } = req.user;
-    const token = jwt.sign({ username }, keys.SESSION.JWT_Secret, {
+    const token = jwt.sign({ username }, keys.JWT_Secret, {
       expiresIn: "1d",
     });
     res.cookie("usersession", token, { maxAge: 24 * 60 * 60 * 1000 });
@@ -57,7 +57,7 @@ router.post("/signup", authSignup, async (req, res) => {
   const newUser = await new User(user);
   await newUser.save();
   const { username, email } = newUser;
-  const token = jwt.sign({ username, email }, keys.SESSION.JWT_Secret, {
+  const token = jwt.sign({ username, email }, keys.JWT_Secret, {
     expiresIn: "1d",
   });
   res.cookie("usersession", token, { maxAge: 24 * 60 * 60 * 1000 });
@@ -69,7 +69,7 @@ router.post("/login", async (req, res) => {
   try {
     const user = await User.login(email, password);
     const { username } = user;
-    const token = jwt.sign({ username, email }, keys.SESSION.JWT_Secret, {
+    const token = jwt.sign({ username, email }, keys.JWT_Secret, {
       expiresIn: "1d",
     });
     res.cookie("usersession", token, {

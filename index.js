@@ -21,7 +21,7 @@ app.use(express.json());
 //     keys: [keys.SESSION.cookieKey],
 //   })
 // );
-app.use(cookieParser(keys.SESSION.cookieKey));
+app.use(cookieParser(keys.cookieKey));
 app.use(passport.initialize());
 app.use(passport.session());
 
