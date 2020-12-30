@@ -2105,7 +2105,7 @@
 }
 
 .auth .auth-wrapper .auth__form--input input {
-  width: 30vw;
+  width: 100%;
   font-size: calc(0.8rem + 0.6vw);
   padding: 1rem;
 }
@@ -2130,6 +2130,15 @@
   color: red;
   margin-bottom: 1rem;
   font-size: calc(0.7rem + 0.5vw);
+  overflow-wrap: break-word;
+}
+
+.auth .auth-wrapper .auth__form--success {
+  color: green;
+  margin-bottom: 1rem;
+  font-size: calc(0.8rem + 0.6vw);
+  width: 100%;
+  word-break: break-all;
 }
 
 .auth .auth-wrapper .oauth {

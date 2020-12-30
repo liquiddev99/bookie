@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 const initialState = {
   username: null,
   errorMsg: "",
+  successMsg: "",
 };
 
 export const fetchUser = createAsyncThunk(
@@ -30,10 +31,8 @@ export const signup = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const res = await axios.post("/auth/signup", userData);
-      const decoded = jwt.verify(res.data, process.env.REACT_APP_JWT_SECRET);
-      return decoded;
+      return res.data;
     } catch (err) {
-      cookie.remove("usersession");
       return rejectWithValue(err.response.data);
     }
   }
@@ -60,11 +59,11 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: {
     [signup.fulfilled]: (state, action) => {
-      state.username = action.payload.username;
+      state.successMsg = action.payload;
       state.errorMsg = "";
     },
     [signup.rejected]: (state, action) => {
-      state.username = null;
+      state.successMsg = "";
       state.errorMsg = action.payload;
     },
     [login.fulfilled]: (state, action) => {

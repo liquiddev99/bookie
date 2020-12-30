@@ -4,9 +4,9 @@ const authSignup = async (req, res, next) => {
   const user = req.body;
   const emailRegEx = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   const passwordRegEx = /^(?=.*\d)(?=.*[a-zA-Z]).{6,}$/;
-  const usernameRegEx = /^[a-zA-Z0-9!@#$%^&*()-_ ]{3,30}$/;
+  const usernameRegEx = /.{3,35}/;
   if (!usernameRegEx.test(user.username)) {
-    return res.status(400).json("Username is not in the correct format");
+    return res.status(400).json("Username must be from 3 to 35 characters");
   }
   if (!emailRegEx.test(user.email)) {
     return res.status(400).json("Must a valid email");

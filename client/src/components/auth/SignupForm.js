@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 
 import { signup } from "../../features/user/userSlice";
 
 const SignupForm = () => {
   const dispatch = useDispatch();
-  const { errorMsg } = useSelector((state) => state.user);
-  const history = useHistory();
+  const { errorMsg, successMsg } = useSelector((state) => state.user);
 
   const [userData, setUserData] = useState({
     username: "",
@@ -15,15 +13,15 @@ const SignupForm = () => {
     password: "",
   });
   const [buttonText, setButtonText] = useState("Signup");
-
   const handleChange = (name) => (e) => {
     setUserData({ ...userData, [name]: e.target.value });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    setButtonText("Signing...");
     dispatch(signup(userData)).then((unwrapResult) => {
       if (unwrapResult.meta.requestStatus === "fulfilled") {
-        history.go(0);
+        setButtonText("Signup");
       }
     });
   };
@@ -38,16 +36,18 @@ const SignupForm = () => {
             id="signup__username"
             placeholder="Username"
             onChange={handleChange("username")}
+            required
           />
         </div>
         <div className="auth__form--input">
           <label htmlFor="signup__email">Email</label>
           <input
-            type="text"
+            type="email"
             className="auth__form--input__email"
             id="signup__email"
             placeholder="Email"
             onChange={handleChange("email")}
+            required
           />
         </div>
         <div className="auth__form--input">
@@ -58,9 +58,13 @@ const SignupForm = () => {
             id="signup__password"
             placeholder="Password"
             onChange={handleChange("password")}
+            required
           />
         </div>
         {errorMsg ? <p className="auth__form--error">{errorMsg}</p> : null}
+        {successMsg ? (
+          <p className="auth__form--success">{successMsg}</p>
+        ) : null}
         <button type="submit" className="auth__form--button">
           {buttonText}
         </button>

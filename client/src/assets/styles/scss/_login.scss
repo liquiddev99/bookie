@@ -29,7 +29,7 @@
           margin-bottom: 0.3rem;
         }
         input {
-          width: 30vw;
+          width: 100%;
           font-size: calc(0.8rem + 0.6vw);
           padding: 1rem;
         }
@@ -52,6 +52,14 @@
         color: red;
         margin-bottom: 1rem;
         font-size: calc(0.7rem + 0.5vw);
+        overflow-wrap: break-word;
+      }
+      &--success {
+        color: green;
+        margin-bottom: 1rem;
+        font-size: calc(0.8rem + 0.6vw);
+        width: 100%;
+        word-break: break-all;
       }
     }
 

@@ -30,11 +30,12 @@ const LoginForm = () => {
         <div className="auth__form--input">
           <label htmlFor="login__email">Email</label>
           <input
-            type="text"
+            type="email"
             className="auth__form--input__email"
             id="login__email"
             placeholder="Email"
             onChange={handleChange("email")}
+            required
           />
         </div>
         <div className="auth__form--input">
@@ -45,6 +46,7 @@ const LoginForm = () => {
             id="login__password"
             placeholder="Password"
             onChange={handleChange("password")}
+            required
           />
         </div>
         {errorMsg ? <p className="auth__form--error">{errorMsg}</p> : null}
