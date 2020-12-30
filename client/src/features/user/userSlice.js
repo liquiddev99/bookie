@@ -19,6 +19,7 @@ export const fetchUser = createAsyncThunk(
       console.log(decoded);
       return decoded;
     } catch (err) {
+      console.log(err);
       return rejectWithValue(err.response.data);
     }
   }

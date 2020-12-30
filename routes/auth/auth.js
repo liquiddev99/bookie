@@ -70,7 +70,7 @@ router.post("/login", async (req, res) => {
     const user = await User.login(email, password);
     const { username } = user;
     const token = jwt.sign({ username, email }, keys.JWT_Secret, {
-      expiresIn: "1d",
+      expiresIn: "1000",
     });
     res.cookie("usersession", token, {
       // signed: true,
