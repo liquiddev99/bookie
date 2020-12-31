@@ -7,4 +7,6 @@ module.exports = {
   cookieKey: process.env.COOKIE_KEY,
   JWT_Secret: process.env.JWT_SECRET,
   CLIENT_URL: process.env.CLIENT_URL,
+  PASSWORD: process.env.PASSWORD,
+  SENDER: process.env.SENDER,
 };

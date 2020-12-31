@@ -15,8 +15,8 @@ router.get(
 );
 router.get("/google/callback", passport.authenticate("google"), (req, res) => {
   console.log(req.user, "user");
-  const { email, username } = req.user;
-  const token = jwt.sign({ username, email }, keys.JWT_Secret, {
+  const { email, username, thumbnail } = req.user;
+  const token = jwt.sign({ username, email, thumbnail }, keys.JWT_Secret, {
     expiresIn: "1d",
   });
   res.cookie("usersession", token, { maxAge: 24 * 60 * 60 * 1000 });
@@ -28,8 +28,8 @@ router.get(
   "/facebook/callback",
   passport.authenticate("facebook"),
   (req, res) => {
-    const { username } = req.user;
-    const token = jwt.sign({ username }, keys.JWT_Secret, {
+    const { username, email, thumbnail } = req.user;
+    const token = jwt.sign({ username, email, thumbnail }, keys.JWT_Secret, {
       expiresIn: "1d",
     });
     res.cookie("usersession", token, { maxAge: 24 * 60 * 60 * 1000 });
@@ -65,12 +65,12 @@ router.post("/signup", authSignup, async (req, res) => {
     port: 465,
     secure: true,
     auth: {
-      user: "tranngocthang.bkdn@gmail.com",
-      pass: "a101190305",
+      user: keys.SENDER,
+      pass: keys.PASSWORD,
     },
   });
   const mailOptions = {
-    from: "tranngocthang.bkdn@gmail.com",
+    from: keys.SENDER,
     to: `${email}`,
     subject: "Bookie - Activate your account",
     html: `

@@ -7,6 +7,7 @@ const initialState = {
   username: null,
   errorMsg: "",
   successMsg: "",
+  thumbnail: "",
 };
 
 export const fetchUser = createAsyncThunk(
@@ -77,6 +78,7 @@ const userSlice = createSlice({
     },
     [fetchUser.fulfilled]: (state, action) => {
       state.username = action.payload.username;
+      state.thumbnail = action.payload.thumbnail || "";
     },
     [fetchUser.rejected]: (state) => {
       state.username = null;

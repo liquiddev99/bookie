@@ -12,7 +12,7 @@ import Auth from "../auth/Auth";
 const Header = (props) => {
   const dispatch = useDispatch();
   const { searchedBooks } = useSelector((state) => state.books);
-  const { username } = useSelector((state) => state.user);
+  const { username, thumbnail } = useSelector((state) => state.user);
   const [account, setAccount] = useState(false);
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
@@ -135,7 +135,9 @@ const Header = (props) => {
             <div className="header__user--cart__content">My Cart</div>
             <div className="header__user--cart__quantity">0</div>
           </div>
-
+          <div className="header__user--img">
+            {thumbnail ? <img src={`${thumbnail}`} /> : null}
+          </div>
           <div className="header__user--account" onClick={toggleAccount}>
             <div className="header__user--account__content">Account</div>
             <div className="header__user--account__dropdown-icon">

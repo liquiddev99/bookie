@@ -21,7 +21,7 @@ passport.use(
       clientID: keys.FACEBOOK_APP_ID,
       clientSecret: keys.FACEBOOK_APP_SECRET,
       callbackURL: "/auth/facebook/callback",
-      profileFields: ["emails", "displayName"],
+      profileFields: ["emails", "displayName", "photos"],
       proxy: true,
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -40,6 +40,7 @@ passport.use(
           username: profile.displayName,
           id: profile.id,
           email: profile._json.email || "",
+          thumbnail: profile.photos[0].value || "",
         });
         await newUser.save();
         done(null, newUser);
@@ -59,7 +60,7 @@ passport.use(
       proxy: true,
     },
     async (accessToken, refreshToken, profile, done) => {
-      const existingUser = await User.findOne({ id: profile.id });
+      const existingUser = await User.findOne({ email: profile._json.email });
       if (existingUser) {
         return done(null, existingUser);
       }

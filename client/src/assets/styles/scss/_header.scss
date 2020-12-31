@@ -149,8 +149,10 @@
 
 .header__user {
   display: grid;
-  grid-template-columns: minmax(13rem, min-content) minmax(11.5rem, min-content);
-  gap: 1rem;
+  grid-template-columns:
+    minmax(13rem, min-content) minmax(min-content, max-content)
+    minmax(11.5rem, min-content);
+  gap: 0.5rem;
   justify-content: end;
   color: white;
   position: relative;
@@ -186,6 +188,15 @@
       @include mobile {
         display: none;
       }
+    }
+  }
+  &--img {
+    text-align: center;
+    img {
+      border-radius: 50%;
+      width: 5rem;
+      max-width: 75%;
+      height: auto;
     }
   }
 

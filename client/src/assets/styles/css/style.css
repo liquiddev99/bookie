@@ -262,8 +262,8 @@
 
 .header__user {
   display: grid;
-  grid-template-columns: minmax(13rem, min-content) minmax(11.5rem, min-content);
-  gap: 1rem;
+  grid-template-columns: minmax(13rem, min-content) minmax(min-content, max-content) minmax(11.5rem, min-content);
+  gap: 0.5rem;
   justify-content: end;
   color: white;
   position: relative;
@@ -307,6 +307,17 @@
   .header__user--cart__content {
     display: none;
   }
+}
+
+.header__user--img {
+  text-align: center;
+}
+
+.header__user--img img {
+  border-radius: 50%;
+  width: 5rem;
+  max-width: 75%;
+  height: auto;
 }
 
 .header__user--cart:hover {
