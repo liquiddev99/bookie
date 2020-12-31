@@ -15,12 +15,9 @@ export const fetchUser = createAsyncThunk(
     try {
       // const res = await axios.get("/auth/user");
       const token = cookie.get("usersession");
-      console.log(token);
       const decoded = jwt.verify(token, process.env.REACT_APP_JWT_SECRET);
-      console.log(decoded);
       return decoded;
     } catch (err) {
-      console.log(err);
       return rejectWithValue(err.response.data);
     }
   }
@@ -47,7 +44,6 @@ export const login = createAsyncThunk(
       return decoded;
     } catch (err) {
       cookie.remove("usersession");
-      console.log(err);
       return rejectWithValue(err.response.data);
     }
   }
@@ -56,7 +52,12 @@ export const login = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    clearStatus(state) {
+      state.errorMsg = "";
+      state.successMsg = "";
+    },
+  },
   extraReducers: {
     [signup.fulfilled]: (state, action) => {
       state.successMsg = action.payload;
@@ -77,7 +78,12 @@ const userSlice = createSlice({
     [fetchUser.fulfilled]: (state, action) => {
       state.username = action.payload.username;
     },
+    [fetchUser.rejected]: (state) => {
+      state.username = null;
+    },
   },
 });
+
+export const { clearStatus } = userSlice.actions;
 
 export default userSlice.reducer;

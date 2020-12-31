@@ -65,34 +65,10 @@ router.post("/signup", authSignup, async (req, res) => {
     port: 465,
     secure: true,
     auth: {
-      // type: "OAuth2",
-
       user: "tranngocthang.bkdn@gmail.com",
-
-      // refreshToken:
-      // "1//04Fk1zjFvLIL3CgYIARAAGAQSNwF-L9IrSJhZukeATCFRr8gE60HMeWXOeEtRyX2WsFBex0-CC4LTBT_2IhfUtUq5nwiA4EA7oSs",
-      // accessToken:
-      // "ya29.a0AfH6SMAQWVDEYNN2M_3qZ-Ugxn1ZiDd2Z1Ny-jAAFGrWhbUansmOKEbDkGcUmS5AKVcXc0oj3zLdOhqrCQnXBxNJS6ROTpgwR5vjgXkuqlSK88oBtbQHiZEIjeVr2uQFu_-aGZhvWrLIzuTW2dSgbQXCkfqayjdmpLqJ5F3eSyc",
-      // expires: 3599,
-      // clientId: keys.GOOGLE_CLIENT_ID,
-      // clientSecret: keys.GOOGLE_CLIENT_SECRET,
       pass: "a101190305",
     },
   });
-  // transporter.set("oauth2_provision_cb", (user, renew, callback) => {
-  //   let accessToken = userTokens[user];
-  //   if (!accessToken) {
-  //     return callback(new Error("Unknown user"));
-  //   } else {
-  //     return callback(null, accessToken);
-  //   }
-  // });
-  // transporter.on("token", (token) => {
-  //   console.log("A new access token was generated");
-  //   console.log("User: ", token.user);
-  //   console.log("Access Token", token.accessToken);
-  //   console.log("Expires:", new Date(token.expires));
-  // });
   const mailOptions = {
     from: "tranngocthang.bkdn@gmail.com",
     to: `${email}`,
@@ -106,11 +82,7 @@ router.post("/signup", authSignup, async (req, res) => {
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
       console.log(error);
-      return res
-        .status(400)
-        .json(
-          `Error when send email to ${email}, please check your email and try again`
-        );
+      return res.status(400).json(`Error when send email to ${email}`);
     } else {
       console.log("Email sent: " + info.response);
       return res.json(`Email has been sent to ${email}`);

@@ -1,17 +1,22 @@
 import React, { useState } from "react";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
+import { useDispatch } from "react-redux";
 
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
+import { clearStatus } from "../../features/user/userSlice";
 
 const Login = (props) => {
+  const dispatch = useDispatch();
   const [method, setMethod] = useState("login");
   const onLoginTab = () => {
     setMethod("login");
+    dispatch(clearStatus());
   };
   const onSignupTab = () => {
     setMethod("signup");
+    dispatch(clearStatus());
   };
 
   return (

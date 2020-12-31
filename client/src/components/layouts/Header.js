@@ -5,7 +5,7 @@ import { Link, withRouter } from "react-router-dom";
 
 import { toggleSidebar } from "../../features/ui/uiSlice";
 import { searchBooks } from "../../features/books/booksSlice";
-import { fetchUser } from "../../features/user/userSlice";
+import { fetchUser, clearStatus } from "../../features/user/userSlice";
 
 import Auth from "../auth/Auth";
 
@@ -45,6 +45,7 @@ const Header = (props) => {
   // Toogle Account Dropdown
   const toggleAccount = () => {
     setAccount(!account);
+    dispatch(clearStatus());
   };
 
   // When click outside, close the account dropdown
