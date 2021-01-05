@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 
 const initialState = {
   username: null,
+  email: "",
   errorMsg: "",
   successMsg: "",
   thumbnail: "",
@@ -14,11 +15,16 @@ export const fetchUser = createAsyncThunk(
   "user/fetchUser",
   async (userData, { rejectWithValue }) => {
     try {
-      // const res = await axios.get("/auth/user");
       const token = cookie.get("usersession");
-      const decoded = jwt.verify(token, process.env.REACT_APP_JWT_SECRET);
-      return decoded;
+      if (!token) {
+        return rejectWithValue("You need login to do this process");
+      }
+      const res = await axios.get("/auth/user", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return res.data;
     } catch (err) {
+      console.log("rejected");
       return rejectWithValue(err.response.data);
     }
   }
@@ -37,7 +43,7 @@ export const signup = createAsyncThunk(
 );
 
 export const login = createAsyncThunk(
-  "user",
+  "user/login",
   async (userData, { rejectWithValue }) => {
     try {
       const res = await axios.post("/auth/login", userData);
@@ -46,6 +52,20 @@ export const login = createAsyncThunk(
     } catch (err) {
       cookie.remove("usersession");
       return rejectWithValue(err.response.data);
+    }
+  }
+);
+
+export const upload = createAsyncThunk(
+  "user/upload",
+  async (file, { rejectWithValue }) => {
+    try {
+      const res = await axios.post("/api/upload", file, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return res.data;
+    } catch (err) {
+      return rejectWithValue();
     }
   }
 );
@@ -79,9 +99,13 @@ const userSlice = createSlice({
     [fetchUser.fulfilled]: (state, action) => {
       state.username = action.payload.username;
       state.thumbnail = action.payload.thumbnail || "";
+      state.email = action.payload.email;
     },
-    [fetchUser.rejected]: (state) => {
+    [fetchUser.rejected]: (state, action) => {
       state.username = null;
+      state.email = "";
+      state.thumbnail = "";
+      state.errorMsg = action.payload;
     },
   },
 });

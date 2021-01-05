@@ -192,10 +192,11 @@
   }
   &--img {
     text-align: center;
+    width: 100%;
     img {
       border-radius: 50%;
-      width: 5rem;
-      max-width: 75%;
+      width: 75%;
+      max-width: 4.6rem;
       height: auto;
     }
   }
@@ -212,7 +213,7 @@
     position: absolute;
     color: black;
     list-style-type: none;
-    padding: 2rem 7rem 2rem 2rem;
+    padding: 2rem 4rem 2rem 2rem;
     font-size: 1.2rem;
     background-color: white;
     top: 100%;
@@ -239,6 +240,10 @@
     }
     li:hover {
       color: color(color-green);
+    }
+    &__account {
+      color: black;
+      text-decoration: none;
     }
   }
 

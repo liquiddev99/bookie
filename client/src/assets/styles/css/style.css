@@ -311,12 +311,13 @@
 
 .header__user--img {
   text-align: center;
+  width: 100%;
 }
 
 .header__user--img img {
   border-radius: 50%;
-  width: 5rem;
-  max-width: 75%;
+  width: 75%;
+  max-width: 4.6rem;
   height: auto;
 }
 
@@ -334,7 +335,7 @@
   position: absolute;
   color: black;
   list-style-type: none;
-  padding: 2rem 7rem 2rem 2rem;
+  padding: 2rem 4rem 2rem 2rem;
   font-size: 1.2rem;
   background-color: white;
   top: 100%;
@@ -369,6 +370,11 @@
 
 .header__user--dropdown li:hover {
   color: #0ab3a3;
+}
+
+.header__user--dropdown__account {
+  color: black;
+  text-decoration: none;
 }
 
 .header__user--dropdown.active {
@@ -2186,5 +2192,25 @@
   margin-top: 0.5rem;
   font-size: calc(1rem + 1vw);
   color: white;
+}
+
+.account {
+  grid-column: 1 / -1;
+}
+
+.account__title {
+  text-align: center;
+  font-size: calc(1vw + 1.3rem);
+  margin-bottom: 2rem;
+}
+
+.account__profile {
+  width: 65%;
+  margin: 0 auto;
+  font-size: calc(0.8vw + 0.8rem);
+}
+
+.account__profile p {
+  margin: 1rem 0;
 }
 /*# sourceMappingURL=style.css.map */

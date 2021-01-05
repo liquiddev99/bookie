@@ -9,6 +9,7 @@ import BooksGenre from "./components/books/BooksGenre";
 import BooksSearch from "./components/books/BooksSearch";
 import ScrollToTop from "./components/layouts/ScrollToTop";
 import BookDetail from "./components/books/BookDetail";
+import Account from "./components/user/Account";
 
 function App(props) {
   // console.log(props.auth);
@@ -19,6 +20,7 @@ function App(props) {
         <Switch>
           <Route path="/books/genre/:genre" component={BooksGenre} />
           <Route path="/books/search" component={BooksSearch} />
+          <Route path="/account" component={Account} />
           <Route path="/book/:id" component={BookDetail} />
           <Route path="/" component={Landing} exact />
         </Switch>

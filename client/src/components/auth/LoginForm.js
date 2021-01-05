@@ -56,7 +56,7 @@ const LoginForm = () => {
       </form>
 
       <p className="auth__form--reset">
-        Forgot password? <a href="#">Click here</a>
+        Forgot password? <a href="/">Click here</a>
       </p>
     </div>
   );

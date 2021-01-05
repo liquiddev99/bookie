@@ -1,4 +1,8 @@
 const mongoose = require("mongoose");
+const slug = require("mongoose-slug-updater");
+
+mongoose.plugin(slug);
+
 const { Schema } = mongoose;
 
 const bookSchema = new Schema(
@@ -9,6 +13,7 @@ const bookSchema = new Schema(
     old_price: Number,
     imgURL: String,
     genre: String,
+    slug: { type: String, slug: "title", slugPaddingSize: 4, unique: true },
   },
   { timestamps: true }
 );

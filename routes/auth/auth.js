@@ -15,8 +15,8 @@ router.get(
 );
 router.get("/google/callback", passport.authenticate("google"), (req, res) => {
   console.log(req.user, "user");
-  const { email, username, thumbnail } = req.user;
-  const token = jwt.sign({ username, email, thumbnail }, keys.JWT_Secret, {
+  const { email, username, thumbnail, _id } = req.user;
+  const token = jwt.sign({ username, email, thumbnail, _id }, keys.JWT_Secret, {
     expiresIn: "1d",
   });
   res.cookie("usersession", token, { maxAge: 24 * 60 * 60 * 1000 });
@@ -28,10 +28,14 @@ router.get(
   "/facebook/callback",
   passport.authenticate("facebook"),
   (req, res) => {
-    const { username, email, thumbnail } = req.user;
-    const token = jwt.sign({ username, email, thumbnail }, keys.JWT_Secret, {
-      expiresIn: "1d",
-    });
+    const { username, email, thumbnail, _id } = req.user;
+    const token = jwt.sign(
+      { username, email, thumbnail, _id },
+      keys.JWT_Secret,
+      {
+        expiresIn: "1d",
+      }
+    );
     res.cookie("usersession", token, { maxAge: 24 * 60 * 60 * 1000 });
     res.redirect("/");
   }
@@ -44,12 +48,19 @@ router.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
-router.get("/user", (req, res) => {
-  const user = req.user;
-  if (user) {
-    return res.json(user);
+router.get("/user", async (req, res) => {
+  try {
+    const { authorization } = req.headers;
+    const token = authorization.split(" ")[1];
+    const _id = jwt.verify(token, keys.JWT_Secret);
+    const user = await User.findById(_id);
+    const { username, email, thumbnail } = user;
+    res.json({ username, email, thumbnail });
+  } catch (err) {
+    res
+      .status(401)
+      .json("You have reached the end of your session, please re-login");
   }
-  return res.status(404).json("Cannot find any user");
 });
 
 // Common Login, Signup
@@ -115,8 +126,14 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.login(email, password);
-    const { username } = user;
-    const token = jwt.sign({ username, email }, keys.JWT_Secret, {
+    const { username, thumbnail, _id } = user;
+    const userData = {
+      _id,
+      username,
+      email,
+      thumbnail: thumbnail || "",
+    };
+    const token = jwt.sign(userData, keys.JWT_Secret, {
       expiresIn: "1d",
     });
     res.cookie("usersession", token, { maxAge: 24 * 60 * 60 * 1000 });

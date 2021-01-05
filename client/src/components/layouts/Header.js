@@ -136,7 +136,7 @@ const Header = (props) => {
             <div className="header__user--cart__quantity">0</div>
           </div>
           <div className="header__user--img">
-            {thumbnail ? <img src={`${thumbnail}`} /> : null}
+            {thumbnail ? <img src={`${thumbnail}`} alt="avatar" /> : null}
           </div>
           <div className="header__user--account" onClick={toggleAccount}>
             <div className="header__user--account__content">Account</div>
@@ -150,7 +150,13 @@ const Header = (props) => {
           >
             {username ? (
               <>
-                <li>My Account ({username})</li>
+                <Link
+                  onClick={toggleAccount}
+                  className="header__user--dropdown__account"
+                  to="/account"
+                >
+                  <li>My Account ({username})</li>
+                </Link>
                 <li>
                   <a href="/auth/logout">Logout</a>
                 </li>

@@ -1,0 +1,18 @@
+.account {
+  grid-column: 1 / -1;
+
+  &__title {
+    text-align: center;
+    font-size: calc(1vw + 1.3rem);
+    margin-bottom: 2rem;
+  }
+  &__profile {
+    width: 65%;
+    margin: 0 auto;
+    font-size: calc(0.8vw + 0.8rem);
+
+    p {
+      margin: 1rem 0;
+    }
+  }
+}
