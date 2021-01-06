@@ -9,6 +9,7 @@ const userSchema = new Schema(
     thumbnail: String,
     email: { type: String, unique: true },
     password: String,
+    cart: { type: Array, default: [] },
   },
   { timestamps: true }
 );

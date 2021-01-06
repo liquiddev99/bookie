@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Slider from "react-slick";
 
 import SkeletonBook from "../skeleton/SkeletonBook";
 import { fetchBook, fetchListBooks } from "../../features/books/booksSlice";
 import Book from "./Book";
-import Slider from "react-slick";
+import { addToCart } from "../../features/user/userSlice";
 
 const NextArrow = (props) => {
   const { className, onClick } = props;
@@ -25,7 +26,7 @@ const PrevArrow = (props) => {
 };
 
 const BookDetail = (props) => {
-  var settings = {
+  const settings = {
     dots: false,
     infinite: true,
     slidesToShow: 6,
@@ -127,7 +128,12 @@ const BookDetail = (props) => {
                 </div>
               </div>
 
-              <button className="book-detail__content--add">Add to Cart</button>
+              <button
+                className="book-detail__content--add"
+                onClick={() => dispatch(addToCart({ id, amount }))}
+              >
+                Add to Cart
+              </button>
             </div>
           </>
         )}

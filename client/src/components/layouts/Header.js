@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
 import { Link, withRouter } from "react-router-dom";
@@ -50,14 +50,17 @@ const Header = (props) => {
 
   // When click outside, close the account dropdown
   const ref = useRef();
-  const handleClick = (e) => {
-    if (
-      ref.current.classList.contains("active") &&
-      !ref.current.contains(e.target)
-    ) {
-      setAccount(!account);
-    }
-  };
+  const handleClick = useCallback(
+    (e) => {
+      if (
+        ref.current.classList.contains("active") &&
+        !ref.current.contains(e.target)
+      ) {
+        setAccount(!account);
+      }
+    },
+    [account]
+  );
   useEffect(() => {
     document.addEventListener("click", handleClick);
     dispatch(fetchUser());

@@ -111,7 +111,6 @@ const Account = () => {
             accept="image/*"
             onChange={onChange}
           />
-          {/* <label htmlFor="file">Choose file</label> */}
           <button type="submit">Upload</button>
         </form>
         {success && <p className="account__profile--success">{success}</p>}

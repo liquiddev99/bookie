@@ -2218,13 +2218,20 @@
   width: 30%;
   height: auto;
   border-radius: 50%;
+  margin-bottom: 2rem;
+}
+
+.account__profile form {
+  margin-bottom: 2rem;
 }
 
 .account__profile--success {
   color: green;
+  margin: 1rem 0;
 }
 
 .account__profile--error {
   color: red;
+  margin-bottom: 1rem 0;
 }
 /*# sourceMappingURL=style.css.map */
