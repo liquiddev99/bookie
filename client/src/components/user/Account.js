@@ -39,12 +39,13 @@ const Account = () => {
           const res = await axios.post("/api/upload", formData, {
             headers: { "Content-Type": "multipart/form-data" },
             onUploadProgress: (progressEvent) => {
-              setProgress(
-                parseInt(
-                  Math.round((progressEvent.loaded * 100) / progressEvent.total)
-                )
+              const loaded = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
               );
-              setTimeout(() => setProgress(0), 4000);
+              setProgress(loaded);
+              if (loaded === 100) {
+                setTimeout(() => setProgress(0), 4000);
+              }
             },
           });
           await dispatch(fetchUser());

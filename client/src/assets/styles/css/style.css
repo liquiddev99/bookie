@@ -2201,7 +2201,7 @@
 .account__title {
   text-align: center;
   font-size: calc(1vw + 1.3rem);
-  margin-bottom: 2rem;
+  margin: 2rem 0;
 }
 
 .account__profile {
