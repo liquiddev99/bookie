@@ -17,7 +17,7 @@ export const fetchUser = createAsyncThunk(
     try {
       const token = cookie.get("usersession");
       if (!token) {
-        return rejectWithValue("You need login to do this process");
+        return rejectWithValue("");
       }
       const res = await axios.get("/auth/user", {
         headers: { Authorization: `Bearer ${token}` },
@@ -106,6 +106,14 @@ const userSlice = createSlice({
       state.email = "";
       state.thumbnail = "";
       state.errorMsg = action.payload;
+    },
+    [upload.fulfilled]: (state, action) => {
+      state.successMsg = action.payload;
+      state.errorMsg = "";
+    },
+    [upload.rejected]: (state, action) => {
+      state.errorMsg = action.payload;
+      state.successMsg = "";
     },
   },
 });

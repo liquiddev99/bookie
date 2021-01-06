@@ -2213,4 +2213,18 @@
 .account__profile p {
   margin: 1rem 0;
 }
+
+.account__profile--thumbnail {
+  width: 30%;
+  height: auto;
+  border-radius: 50%;
+}
+
+.account__profile--success {
+  color: green;
+}
+
+.account__profile--error {
+  color: red;
+}
 /*# sourceMappingURL=style.css.map */

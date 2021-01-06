@@ -14,5 +14,16 @@
     p {
       margin: 1rem 0;
     }
+    &--thumbnail {
+      width: 30%;
+      height: auto;
+      border-radius: 50%;
+    }
+    &--success {
+      color: green;
+    }
+    &--error {
+      color: red;
+    }
   }
 }

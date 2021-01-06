@@ -64,7 +64,7 @@ const Header = (props) => {
     return () => {
       document.removeEventListener("click", handleClick);
     };
-  });
+  }, [dispatch]);
 
   return (
     <header id="header">

@@ -25,7 +25,7 @@ router.post("/upload", async (req, res) => {
     });
     const path = keys.CLIENT_URL + `/api/avatar/${name}`;
     await User.findByIdAndUpdate(_id, { thumbnail: path });
-    return res.json("uploaded");
+    return res.json("Image uploaded");
   } catch (err) {
     console.log(err, "Error upload image");
     return res.json("Can't upload image, please try again");
