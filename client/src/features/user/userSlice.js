@@ -55,21 +55,6 @@ export const login = createAsyncThunk(
     }
   }
 );
-
-export const upload = createAsyncThunk(
-  "user/upload",
-  async (file, { rejectWithValue }) => {
-    try {
-      const res = await axios.post("/api/upload", file, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      return res.data;
-    } catch (err) {
-      return rejectWithValue();
-    }
-  }
-);
-
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -106,14 +91,6 @@ const userSlice = createSlice({
       state.email = "";
       state.thumbnail = "";
       state.errorMsg = action.payload;
-    },
-    [upload.fulfilled]: (state, action) => {
-      state.successMsg = action.payload;
-      state.errorMsg = "";
-    },
-    [upload.rejected]: (state, action) => {
-      state.errorMsg = action.payload;
-      state.successMsg = "";
     },
   },
 });

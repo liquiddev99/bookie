@@ -1,18 +1,20 @@
 import React, { useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import AvatarEditor from "react-avatar-editor";
+import axios from "axios";
+import { Line } from "rc-progress";
 
-import { upload, fetchUser } from "../../features/user/userSlice";
+import { fetchUser } from "../../features/user/userSlice";
 
 const Account = () => {
-  const { username, email, thumbnail, successMsg, errorMsg } = useSelector(
-    (state) => state.user
-  );
+  const { username, email, thumbnail } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [file, setFile] = useState("");
   const [nameFile, setNameFile] = useState("");
   const [scale, setScale] = useState(1);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [progress, setProgress] = useState(0);
   const ref = useRef();
 
   const onChange = (e) => {
@@ -29,18 +31,30 @@ const Account = () => {
     e.preventDefault();
     if (ref.current) {
       setError("");
-      ref.current.getImageScaledToCanvas().toBlob((blob) => {
-        const scaledFile = new File([blob], nameFile);
-        const formData = new FormData();
-        formData.append("file", scaledFile);
-        dispatch(upload(formData)).then((unwrapResult) => {
-          if (unwrapResult.meta.requestStatus === "fulfilled") {
-            dispatch(fetchUser());
-            setFile("");
-          }
-        });
+      ref.current.getImageScaledToCanvas().toBlob(async (blob) => {
+        try {
+          const scaledFile = new File([blob], nameFile);
+          const formData = new FormData();
+          formData.append("file", scaledFile);
+          const res = await axios.post("/api/upload", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+            onUploadProgress: (progressEvent) => {
+              setProgress(
+                parseInt(
+                  Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                )
+              );
+              setTimeout(() => setProgress(0), 4000);
+            },
+          });
+          await dispatch(fetchUser());
+          setSuccess(res.data);
+        } catch (err) {
+          setError(err.response.data);
+        }
       });
     } else {
+      setSuccess("");
       setError("Please choose file");
     }
   };
@@ -85,6 +99,9 @@ const Account = () => {
             />
           </>
         )}
+        {progress > 0 && (
+          <Line percent={progress} strokeColor="green" trailColor="#D3D3D3" />
+        )}
         <form onSubmit={onSubmit}>
           <input
             type="file"
@@ -96,10 +113,7 @@ const Account = () => {
           {/* <label htmlFor="file">Choose file</label> */}
           <button type="submit">Upload</button>
         </form>
-        {successMsg && (
-          <p className="account__profile--success">{successMsg}</p>
-        )}
-        {errorMsg && <p className="account__profile--error">{errorMsg}</p>}
+        {success && <p className="account__profile--success">{success}</p>}
         {error && <p className="account__profile--error">{error}</p>}
       </div>
     </div>
