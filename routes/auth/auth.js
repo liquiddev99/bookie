@@ -52,7 +52,7 @@ router.get("/user", async (req, res) => {
   try {
     const { authorization } = req.headers;
     const token = authorization.split(" ")[1];
-    const _id = jwt.verify(token, keys.JWT_Secret);
+    const { _id } = jwt.verify(token, keys.JWT_Secret);
     const user = await User.findById(_id);
     const { username, email, thumbnail } = user;
     res.json({ username, email, thumbnail });

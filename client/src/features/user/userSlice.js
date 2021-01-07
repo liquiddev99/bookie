@@ -58,33 +58,46 @@ export const login = createAsyncThunk(
 
 export const addToCart = createAsyncThunk(
   "user/addToCart",
-  async ({ id, amount }, { rejectWithValue }) => {
+  ({ id, amount }, { rejectWithValue }) => {
     try {
       console.log(id, amount);
       let cart = cookie.get("cart");
       const token = cookie.get("usersession");
-      jwt.verify(token, process.env.REACT_APP_JWT_SECRET, (err, decoded) => {
-        if (err) {
-          if (cart) {
-            cart = JSON.parse(cart);
-            const index = cart.findIndex((e) => e.id === id);
-            if (index === -1) {
-              cart.push({ id, amount });
-              cookie.set("cart", JSON.stringify(cart));
+      jwt.verify(
+        token,
+        process.env.REACT_APP_JWT_SECRET,
+        async (err, decoded) => {
+          if (err) {
+            if (cart) {
+              cart = JSON.parse(cart);
+              const index = cart.findIndex((e) => e.id === id);
+              if (index === -1) {
+                cart.push({ id, amount });
+                cookie.set("cart", JSON.stringify(cart));
+              } else {
+                cart[index].amount += amount;
+                cookie.set("cart", JSON.stringify(cart));
+              }
+              console.log(cart, "cart exist");
             } else {
-              cart[index].amount += amount;
+              cart = [{ id, amount }];
               cookie.set("cart", JSON.stringify(cart));
             }
-            console.log(cart, "cart exist");
           } else {
-            cart = [{ id, amount }];
-            cookie.set("cart", JSON.stringify(cart));
+            console.log("logged in");
+            const res = await axios.post(
+              "/api/purchase",
+              { id, amount },
+              { headers: { Authorization: `Bearer ${token}` } }
+            );
+            console.log(res.data);
+            return res.data;
           }
         }
-      });
+      );
     } catch (err) {
       console.log("Error when add to cart", err.response.data);
-      return rejectWithValue();
+      return rejectWithValue(err.response.data);
     }
   }
 );

@@ -42,4 +42,29 @@ router.get("/avatar/:name", async (req, res) => {
   res.send(image.data);
 });
 
+router.post("/purchase", async (req, res) => {
+  try {
+    const { authorization } = req.headers;
+    const { id, amount } = req.body;
+    console.log(id, amount);
+    const token = authorization.split(" ")[1];
+    const { _id } = jwt.verify(token, keys.JWT_Secret);
+    const user = await User.findById(_id);
+    const index = user.cart.findIndex((e) => e.id === id);
+    if (index === -1) {
+      await User.updateOne({ _id }, { $push: { cart: { id, amount } } });
+    } else {
+      console.log(user.cart[index].amount);
+      await User.updateOne(
+        { _id, "cart.id": id },
+        { $inc: { "cart.$.amount": amount } }
+      );
+      console.log("good exist");
+    }
+    return res.json("Added to cart");
+  } catch (err) {
+    return res.status(401).json("Can't purchase goods now, please try later");
+  }
+});
+
 module.exports = router;
