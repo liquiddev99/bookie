@@ -49,17 +49,6 @@ router.post("/purchase", async (req, res) => {
     const { id, amount } = req.body;
     const token = authorization.split(" ")[1];
     const { _id } = jwt.verify(token, keys.JWT_Secret);
-    // const user = await User.findById(_id);
-    // const index = user.cart.findIndex((e) => e.id === id);
-    // if (index === -1) {
-    //   await User.updateOne({ _id }, { $push: { cart: { id, amount } } });
-    // } else {
-    //   await User.updateOne(
-    //     { _id, "cart.id": id },
-    //     { $inc: { "cart.$.amount": amount } }
-    //   );
-    // }
-    // console.log(_id);
     await User.updateOne({ _id }, { $push: { cart: { id, amount } } });
     const shoppingCart = await User.aggregate([
       {
@@ -74,10 +63,9 @@ router.post("/purchase", async (req, res) => {
         },
       },
     ]);
-    console.log(shoppingCart);
     return res.json(shoppingCart);
   } catch (err) {
-    return res.status(401).json("Can't purchase goods now, please try later");
+    return res.status(401).json("Can't purchase goods now, please re-login");
   }
 });
 

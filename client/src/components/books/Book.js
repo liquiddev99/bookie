@@ -1,7 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+import { addToCart } from "../../features/user/userSlice";
 
 const Book = (props) => {
+  const dispatch = useDispatch();
+  const id = props.id;
+  const amount = 1;
+
   return (
     <div className="book">
       <Link to={`/book/${props.id}`} className="book__link">
@@ -14,7 +21,12 @@ const Book = (props) => {
           {props.old_price.toFixed(3)} đ
         </div>
         {props.hideButton ? null : (
-          <button className="book__content--button">Add to cart</button>
+          <button
+            onClick={() => dispatch(addToCart({ id, amount }))}
+            className="book__content--button"
+          >
+            Add to cart
+          </button>
         )}
       </div>
     </div>

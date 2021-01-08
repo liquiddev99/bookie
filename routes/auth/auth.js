@@ -3,6 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 const User = require("../../models/User");
 const { authSignup } = require("../../middleware/auth");
@@ -17,12 +18,10 @@ router.get(
   "/google/callback",
   passport.authenticate("google"),
   async (req, res) => {
-    console.log(req.user, "user");
     const { email, username, thumbnail, _id } = req.user;
     let cartCookie = req.cookies.cart;
-    cartCookie = JSON.parse(cartCookie);
-    console.log(cartCookie);
     if (cartCookie) {
+      cartCookie = JSON.parse(cartCookie);
       await User.updateOne({ _id }, { $push: { cart: { $each: cartCookie } } });
       res.clearCookie("cart");
     }
@@ -30,10 +29,10 @@ router.get(
       { username, email, thumbnail, _id },
       keys.JWT_Secret,
       {
-        expiresIn: "1d",
+        expiresIn: "7d",
       }
     );
-    res.cookie("usersession", token, { maxAge: 24 * 60 * 60 * 1000 });
+    res.cookie("usersession", token, { maxAge: 7 * 24 * 60 * 60 * 1000 });
     res.redirect("/");
   }
 );
@@ -45,9 +44,8 @@ router.get(
   async (req, res) => {
     const { username, email, thumbnail, _id } = req.user;
     let cartCookie = req.cookies.cart;
-    cartCookie = JSON.parse(cartCookie);
-    console.log(cartCookie);
     if (cartCookie) {
+      cartCookie = JSON.parse(cartCookie);
       await User.updateOne({ _id }, { $push: { cart: { $each: cartCookie } } });
       res.clearCookie("cart");
     }
@@ -55,10 +53,10 @@ router.get(
       { username, email, thumbnail, _id },
       keys.JWT_Secret,
       {
-        expiresIn: "1d",
+        expiresIn: "7d",
       }
     );
-    res.cookie("usersession", token, { maxAge: 24 * 60 * 60 * 1000 });
+    res.cookie("usersession", token, { maxAge: 7 * 24 * 60 * 60 * 1000 });
     res.redirect("/");
   }
 );
@@ -66,7 +64,6 @@ router.get(
 router.get("/logout", (req, res) => {
   req.logout();
   res.clearCookie("usersession");
-  console.log("logged out");
   res.redirect("/");
 });
 
@@ -77,8 +74,22 @@ router.get("/user", async (req, res) => {
     const { _id } = jwt.verify(token, keys.JWT_Secret);
     const user = await User.findById(_id);
     const { username, email, thumbnail } = user;
-    res.json({ username, email, thumbnail });
+    const shoppingCart = await User.aggregate([
+      {
+        $match: { _id: ObjectId(_id) },
+      },
+      { $project: { cart: 1, _id: 0 } },
+      { $unwind: "$cart" },
+      {
+        $group: {
+          _id: "$cart.id",
+          total: { $sum: "$cart.amount" },
+        },
+      },
+    ]);
+    res.json({ username, email, thumbnail, shoppingCart });
   } catch (err) {
+    console.log(err);
     res
       .status(401)
       .json("You have reached the end of your session, please re-login");
@@ -156,16 +167,15 @@ router.post("/login", async (req, res) => {
       thumbnail: thumbnail || "",
     };
     let cartCookie = req.cookies("cart");
-    cartCookie = JSON.parse(cartCookie);
-    console.log(cartCookie);
     if (cartCookie) {
+      cartCookie = JSON.parse(cartCookie);
       await User.updateOne({ _id }, { $push: { cart: { $each: cartCookie } } });
       res.clearCookie("cart");
     }
     const token = jwt.sign(userData, keys.JWT_Secret, {
-      expiresIn: "1d",
+      expiresIn: "7d",
     });
-    res.cookie("usersession", token, { maxAge: 24 * 60 * 60 * 1000 });
+    res.cookie("usersession", token, { maxAge: 7 * 24 * 60 * 60 * 1000 });
     res.json(token);
   } catch (err) {
     res.status(400).json(err);

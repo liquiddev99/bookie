@@ -9,6 +9,7 @@ const initialState = {
   errorMsg: "",
   successMsg: "",
   thumbnail: "",
+  cart: null,
 };
 
 export const fetchUser = createAsyncThunk(
@@ -24,7 +25,7 @@ export const fetchUser = createAsyncThunk(
       });
       return res.data;
     } catch (err) {
-      console.log("rejected");
+      console.log(err.response.data);
       return rejectWithValue(err.response.data);
     }
   }
@@ -58,44 +59,40 @@ export const login = createAsyncThunk(
 
 export const addToCart = createAsyncThunk(
   "user/addToCart",
-  ({ id, amount }, { rejectWithValue }) => {
+  async ({ id, amount }, { rejectWithValue }) => {
     try {
-      console.log(id, amount);
-      let cart = cookie.getJSON("cart");
       const token = cookie.get("usersession");
-      jwt.verify(
-        token,
-        process.env.REACT_APP_JWT_SECRET,
-        async (err, decoded) => {
-          if (err) {
-            if (cart) {
-              // cart = JSON.parse(cart);
-              const index = cart.findIndex((e) => e.id === id);
-              if (index === -1) {
-                cart.push({ id, amount });
-                cookie.set("cart", JSON.stringify(cart), { expires: 15 });
-              } else {
-                cart[index].amount += amount;
-                cookie.set("cart", JSON.stringify(cart), { expires: 15 });
-              }
-              console.log(cart, "cart exist");
-            } else {
-              cart = [{ id, amount }];
-              cookie.set("cart", JSON.stringify(cart), { expires: 15 });
-            }
-          } else {
-            console.log("logged in");
-            const res = await axios.post(
-              "/api/purchase",
-              { id, amount },
-              { headers: { Authorization: `Bearer ${token}` } }
-            );
-            console.log(res.data);
-            return res.data;
-          }
-        }
+      jwt.verify(token, process.env.REACT_APP_JWT_SECRET);
+      const res = await axios.post(
+        "/api/purchase",
+        { id, amount },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
+      return res.data;
     } catch (err) {
+      console.log(err);
+      if (
+        err.message === "jwt must be provided" ||
+        err.message === "jwt expired"
+      ) {
+        let cart = cookie.getJSON("cart");
+        if (cart) {
+          const index = cart.findIndex((e) => e.id === id);
+          if (index === -1) {
+            cart.push({ id, amount });
+            cookie.set("cart", JSON.stringify(cart), { expires: 15 });
+            return cart;
+          } else {
+            cart[index].amount += amount;
+            cookie.set("cart", JSON.stringify(cart), { expires: 15 });
+            return cart;
+          }
+        } else {
+          cart = [{ id, amount }];
+          cookie.set("cart", JSON.stringify(cart), { expires: 15 });
+          return cart;
+        }
+      }
       console.log("Error when add to cart", err.response.data);
       return rejectWithValue(err.response.data);
     }
@@ -132,12 +129,16 @@ const userSlice = createSlice({
       state.username = action.payload.username;
       state.thumbnail = action.payload.thumbnail || "";
       state.email = action.payload.email;
+      state.cart = action.payload.shoppingCart;
     },
     [fetchUser.rejected]: (state, action) => {
       state.username = null;
       state.email = "";
       state.thumbnail = "";
       state.errorMsg = action.payload;
+    },
+    [addToCart.fulfilled]: (state, action) => {
+      state.cart = action.payload;
     },
   },
 });
