@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const jwt = require("jsonwebtoken");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 const Avatar = require("../../models/Avatar");
 const User = require("../../models/User");
@@ -46,22 +47,35 @@ router.post("/purchase", async (req, res) => {
   try {
     const { authorization } = req.headers;
     const { id, amount } = req.body;
-    console.log(id, amount);
     const token = authorization.split(" ")[1];
     const { _id } = jwt.verify(token, keys.JWT_Secret);
-    const user = await User.findById(_id);
-    const index = user.cart.findIndex((e) => e.id === id);
-    if (index === -1) {
-      await User.updateOne({ _id }, { $push: { cart: { id, amount } } });
-    } else {
-      console.log(user.cart[index].amount);
-      await User.updateOne(
-        { _id, "cart.id": id },
-        { $inc: { "cart.$.amount": amount } }
-      );
-      console.log("good exist");
-    }
-    return res.json("Added to cart");
+    // const user = await User.findById(_id);
+    // const index = user.cart.findIndex((e) => e.id === id);
+    // if (index === -1) {
+    //   await User.updateOne({ _id }, { $push: { cart: { id, amount } } });
+    // } else {
+    //   await User.updateOne(
+    //     { _id, "cart.id": id },
+    //     { $inc: { "cart.$.amount": amount } }
+    //   );
+    // }
+    // console.log(_id);
+    await User.updateOne({ _id }, { $push: { cart: { id, amount } } });
+    const shoppingCart = await User.aggregate([
+      {
+        $match: { _id: ObjectId(_id) },
+      },
+      { $project: { cart: 1, _id: 0 } },
+      { $unwind: "$cart" },
+      {
+        $group: {
+          _id: "$cart.id",
+          total: { $sum: "$cart.amount" },
+        },
+      },
+    ]);
+    console.log(shoppingCart);
+    return res.json(shoppingCart);
   } catch (err) {
     return res.status(401).json("Can't purchase goods now, please try later");
   }

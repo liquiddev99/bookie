@@ -61,7 +61,7 @@ export const addToCart = createAsyncThunk(
   ({ id, amount }, { rejectWithValue }) => {
     try {
       console.log(id, amount);
-      let cart = cookie.get("cart");
+      let cart = cookie.getJSON("cart");
       const token = cookie.get("usersession");
       jwt.verify(
         token,
@@ -69,19 +69,19 @@ export const addToCart = createAsyncThunk(
         async (err, decoded) => {
           if (err) {
             if (cart) {
-              cart = JSON.parse(cart);
+              // cart = JSON.parse(cart);
               const index = cart.findIndex((e) => e.id === id);
               if (index === -1) {
                 cart.push({ id, amount });
-                cookie.set("cart", JSON.stringify(cart));
+                cookie.set("cart", JSON.stringify(cart), { expires: 15 });
               } else {
                 cart[index].amount += amount;
-                cookie.set("cart", JSON.stringify(cart));
+                cookie.set("cart", JSON.stringify(cart), { expires: 15 });
               }
               console.log(cart, "cart exist");
             } else {
               cart = [{ id, amount }];
-              cookie.set("cart", JSON.stringify(cart));
+              cookie.set("cart", JSON.stringify(cart), { expires: 15 });
             }
           } else {
             console.log("logged in");

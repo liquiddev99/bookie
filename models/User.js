@@ -31,7 +31,6 @@ userSchema.statics.login = async function (email, password) {
       throw "This email has been used to google or facebook login";
     }
     const auth = await bcrypt.compare(password, user.password);
-    console.log(auth);
     if (auth) {
       return user;
     }

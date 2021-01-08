@@ -13,22 +13,44 @@ router.get(
   "/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
 );
-router.get("/google/callback", passport.authenticate("google"), (req, res) => {
-  console.log(req.user, "user");
-  const { email, username, thumbnail, _id } = req.user;
-  const token = jwt.sign({ username, email, thumbnail, _id }, keys.JWT_Secret, {
-    expiresIn: "1d",
-  });
-  res.cookie("usersession", token, { maxAge: 24 * 60 * 60 * 1000 });
-  res.redirect("/");
-});
+router.get(
+  "/google/callback",
+  passport.authenticate("google"),
+  async (req, res) => {
+    console.log(req.user, "user");
+    const { email, username, thumbnail, _id } = req.user;
+    let cartCookie = req.cookies.cart;
+    cartCookie = JSON.parse(cartCookie);
+    console.log(cartCookie);
+    if (cartCookie) {
+      await User.updateOne({ _id }, { $push: { cart: { $each: cartCookie } } });
+      res.clearCookie("cart");
+    }
+    const token = jwt.sign(
+      { username, email, thumbnail, _id },
+      keys.JWT_Secret,
+      {
+        expiresIn: "1d",
+      }
+    );
+    res.cookie("usersession", token, { maxAge: 24 * 60 * 60 * 1000 });
+    res.redirect("/");
+  }
+);
 
 router.get("/facebook", passport.authenticate("facebook"));
 router.get(
   "/facebook/callback",
   passport.authenticate("facebook"),
-  (req, res) => {
+  async (req, res) => {
     const { username, email, thumbnail, _id } = req.user;
+    let cartCookie = req.cookies.cart;
+    cartCookie = JSON.parse(cartCookie);
+    console.log(cartCookie);
+    if (cartCookie) {
+      await User.updateOne({ _id }, { $push: { cart: { $each: cartCookie } } });
+      res.clearCookie("cart");
+    }
     const token = jwt.sign(
       { username, email, thumbnail, _id },
       keys.JWT_Secret,
@@ -123,8 +145,8 @@ router.get("/activate/:token", async (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
   try {
+    const { email, password } = req.body;
     const user = await User.login(email, password);
     const { username, thumbnail, _id } = user;
     const userData = {
@@ -133,6 +155,13 @@ router.post("/login", async (req, res) => {
       email,
       thumbnail: thumbnail || "",
     };
+    let cartCookie = req.cookies("cart");
+    cartCookie = JSON.parse(cartCookie);
+    console.log(cartCookie);
+    if (cartCookie) {
+      await User.updateOne({ _id }, { $push: { cart: { $each: cartCookie } } });
+      res.clearCookie("cart");
+    }
     const token = jwt.sign(userData, keys.JWT_Secret, {
       expiresIn: "1d",
     });
