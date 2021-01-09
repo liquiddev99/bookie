@@ -1,5 +1,14 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from "redux-persist";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 import booksReducer from "../features/books/booksSlice";
@@ -18,5 +27,10 @@ export const store = configureStore({
     ui: uiReducer,
     user: persistReducer(userPersistConfig, userReducer),
   },
+  middleware: getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+    },
+  }),
 });
 export const persistor = persistStore(store);

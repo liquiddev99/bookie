@@ -45,10 +45,43 @@ router.get("/avatar/:name", async (req, res) => {
 
 router.post("/purchase", async (req, res) => {
   try {
-    const { authorization } = req.headers;
+    const { usersession } = req.signedCookies;
     const { id, amount } = req.body;
-    const token = authorization.split(" ")[1];
-    const { _id } = jwt.verify(token, keys.JWT_Secret);
+    console.log(usersession);
+    if (!usersession) {
+      let { cart } = req.signedCookies;
+      console.log(cart);
+      if (cart) {
+        cart = JSON.parse(cart);
+        const index = cart.findIndex((e) => e.id === id);
+        if (index === -1) {
+          cart.push({ id, amount });
+          res.cookie("cart", JSON.stringify(cart), {
+            maxAge: 15 * 3600 * 24 * 1000,
+            httpOnly: true,
+            signed: true,
+          });
+          return res.json(cart);
+        } else {
+          cart[index].amount += amount;
+          res.cookie("cart", JSON.stringify(cart), {
+            maxAge: 15 * 3600 * 24 * 1000,
+            httpOnly: true,
+            signed: true,
+          });
+          return res.json(cart);
+        }
+      } else {
+        cart = [{ id, amount }];
+        res.cookie("cart", JSON.stringify(cart), {
+          maxAge: 15 * 3600 * 24 * 1000,
+          httpOnly: true,
+          signed: true,
+        });
+        return res.json(cart);
+      }
+    }
+    const { _id } = jwt.verify(usersession, keys.JWT_Secret);
     await User.updateOne({ _id }, { $push: { cart: { id, amount } } });
     const shoppingCart = await User.aggregate([
       {
@@ -65,6 +98,7 @@ router.post("/purchase", async (req, res) => {
     ]);
     return res.json(shoppingCart);
   } catch (err) {
+    console.log(err);
     return res.status(401).json("Can't purchase goods now, please re-login");
   }
 });

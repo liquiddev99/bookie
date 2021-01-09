@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import cookie from "js-cookie";
-import jwt from "jsonwebtoken";
 
 const initialState = {
   username: null,
@@ -9,7 +7,7 @@ const initialState = {
   errorMsg: "",
   successMsg: "",
   thumbnail: "",
-  cart: null,
+  cart: [],
   isLoggedIn: false,
 };
 
@@ -45,7 +43,6 @@ export const login = createAsyncThunk(
       const res = await axios.post("/auth/login", userData);
       return res.data;
     } catch (err) {
-      cookie.remove("usersession");
       return rejectWithValue(err.response.data);
     }
   }
@@ -55,38 +52,10 @@ export const addToCart = createAsyncThunk(
   "user/addToCart",
   async ({ id, amount }, { rejectWithValue }) => {
     try {
-      const token = cookie.get("usersession");
-      jwt.verify(token, process.env.REACT_APP_JWT_SECRET);
-      const res = await axios.post(
-        "/api/purchase",
-        { id, amount },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      const res = await axios.post("/api/purchase", { id, amount });
       return res.data;
     } catch (err) {
       console.log(err);
-      if (
-        err.message === "jwt must be provided" ||
-        err.message === "jwt expired"
-      ) {
-        let cart = cookie.getJSON("cart");
-        if (cart) {
-          const index = cart.findIndex((e) => e.id === id);
-          if (index === -1) {
-            cart.push({ id, amount });
-            cookie.set("cart", JSON.stringify(cart), { expires: 15 });
-            return cart;
-          } else {
-            cart[index].amount += amount;
-            cookie.set("cart", JSON.stringify(cart), { expires: 15 });
-            return cart;
-          }
-        } else {
-          cart = [{ id, amount }];
-          cookie.set("cart", JSON.stringify(cart), { expires: 15 });
-          return cart;
-        }
-      }
       console.log("Error when add to cart", err.response.data);
       return rejectWithValue(err.response.data);
     }
@@ -127,13 +96,14 @@ const userSlice = createSlice({
       state.thumbnail = action.payload.thumbnail || "";
       state.email = action.payload.email || "";
       state.cart = action.payload.shoppingCart || [];
-      state.isLoggedIn = action.payload.username ? true : false;
+      state.isLoggedIn = action.payload.isLoggedIn;
     },
     [fetchUser.rejected]: (state, action) => {
       state.username = null;
       state.email = "";
       state.thumbnail = "";
       state.errorMsg = action.payload;
+      state.isLoggedIn = false;
     },
     [addToCart.fulfilled]: (state, action) => {
       state.cart = action.payload;

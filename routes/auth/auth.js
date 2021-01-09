@@ -19,7 +19,7 @@ router.get(
   passport.authenticate("google"),
   async (req, res) => {
     const { email, username, thumbnail, _id } = req.user;
-    let cartCookie = req.cookies.cart;
+    let cartCookie = req.signedCookies.cart;
     if (cartCookie) {
       cartCookie = JSON.parse(cartCookie);
       await User.updateOne({ _id }, { $push: { cart: { $each: cartCookie } } });
@@ -47,7 +47,7 @@ router.get(
   passport.authenticate("facebook"),
   async (req, res) => {
     const { username, email, thumbnail, _id } = req.user;
-    let cartCookie = req.cookies.cart;
+    let cartCookie = req.signedCookies.cart;
     if (cartCookie) {
       cartCookie = JSON.parse(cartCookie);
       await User.updateOne({ _id }, { $push: { cart: { $each: cartCookie } } });
@@ -79,7 +79,8 @@ router.get("/user", async (req, res) => {
   try {
     const { usersession } = req.signedCookies;
     if (!usersession) {
-      const cart = req.cookies.cart || [];
+      let cart = req.signedCookies.cart || [];
+      cart = JSON.parse(cart);
       return res.json({ shoppingCart: cart, isLoggedIn: false });
     }
     const { _id } = jwt.verify(usersession, keys.JWT_Secret);
@@ -97,10 +98,11 @@ router.get("/user", async (req, res) => {
         },
       },
     ]);
-    res.json({ username, email, thumbnail, shoppingCart });
+    res.json({ username, email, thumbnail, shoppingCart, isLoggedIn: true });
   } catch (err) {
     console.log(err);
     if (err.message === "jwt expired") {
+      res.clearCookie("usersession");
       return res
         .status(400)
         .json("You have reached the end of your session, please re-login");
@@ -181,7 +183,7 @@ router.post("/login", async (req, res) => {
       email,
       thumbnail: thumbnail || "",
     };
-    let cartCookie = req.cookies.cart;
+    let cartCookie = req.signedCookies.cart;
     if (cartCookie) {
       cartCookie = JSON.parse(cartCookie);
       await User.updateOne({ _id }, { $push: { cart: { $each: cartCookie } } });
