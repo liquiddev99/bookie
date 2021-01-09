@@ -79,7 +79,7 @@ router.get("/user", async (req, res) => {
   try {
     const { usersession } = req.signedCookies;
     if (!usersession) {
-      let cart = req.signedCookies.cart || [];
+      let cart = req.signedCookies.cart || "[]";
       cart = JSON.parse(cart);
       return res.json({ shoppingCart: cart, isLoggedIn: false });
     }
