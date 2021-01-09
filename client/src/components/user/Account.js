@@ -3,11 +3,14 @@ import { useSelector, useDispatch } from "react-redux";
 import AvatarEditor from "react-avatar-editor";
 import axios from "axios";
 import { Line } from "rc-progress";
+import { Redirect } from "react-router-dom";
 
 import { fetchUser } from "../../features/user/userSlice";
 
 const Account = () => {
-  const { username, email, thumbnail } = useSelector((state) => state.user);
+  const { username, email, thumbnail, isLoggedIn } = useSelector(
+    (state) => state.user
+  );
   const dispatch = useDispatch();
   const [file, setFile] = useState("");
   const [nameFile, setNameFile] = useState("");
@@ -62,6 +65,7 @@ const Account = () => {
 
   return (
     <div className="account">
+      {!isLoggedIn && <Redirect to="/" />}
       <h1 className="account__title">My account</h1>
       <div className="account__profile">
         <p className="account__profile--username">Username: {username}</p>

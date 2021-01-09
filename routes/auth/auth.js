@@ -32,7 +32,11 @@ router.get(
         expiresIn: "7d",
       }
     );
-    res.cookie("usersession", token, { maxAge: 7 * 24 * 60 * 60 * 1000 });
+    res.cookie("usersession", token, {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      signed: true,
+      httpOnly: true,
+    });
     res.redirect("/");
   }
 );
@@ -56,7 +60,11 @@ router.get(
         expiresIn: "7d",
       }
     );
-    res.cookie("usersession", token, { maxAge: 7 * 24 * 60 * 60 * 1000 });
+    res.cookie("usersession", token, {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      signed: true,
+    });
     res.redirect("/");
   }
 );
@@ -69,11 +77,13 @@ router.get("/logout", (req, res) => {
 
 router.get("/user", async (req, res) => {
   try {
-    const { authorization } = req.headers;
-    const token = authorization.split(" ")[1];
-    const { _id } = jwt.verify(token, keys.JWT_Secret);
-    const user = await User.findById(_id);
-    const { username, email, thumbnail } = user;
+    const { usersession } = req.signedCookies;
+    if (!usersession) {
+      const cart = req.cookies.cart || [];
+      return res.json({ shoppingCart: cart, isLoggedIn: false });
+    }
+    const { _id } = jwt.verify(usersession, keys.JWT_Secret);
+    const { username, email, thumbnail } = await User.findById(_id);
     const shoppingCart = await User.aggregate([
       {
         $match: { _id: ObjectId(_id) },
@@ -90,9 +100,14 @@ router.get("/user", async (req, res) => {
     res.json({ username, email, thumbnail, shoppingCart });
   } catch (err) {
     console.log(err);
-    res
+    if (err.message === "jwt expired") {
+      return res
+        .status(400)
+        .json("You have reached the end of your session, please re-login");
+    }
+    return res
       .status(401)
-      .json("You have reached the end of your session, please re-login");
+      .json("Some thing went wrong with your credentials, please re-login");
   }
 });
 
@@ -166,7 +181,7 @@ router.post("/login", async (req, res) => {
       email,
       thumbnail: thumbnail || "",
     };
-    let cartCookie = req.cookies("cart");
+    let cartCookie = req.cookies.cart;
     if (cartCookie) {
       cartCookie = JSON.parse(cartCookie);
       await User.updateOne({ _id }, { $push: { cart: { $each: cartCookie } } });
@@ -175,9 +190,14 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(userData, keys.JWT_Secret, {
       expiresIn: "7d",
     });
-    res.cookie("usersession", token, { maxAge: 7 * 24 * 60 * 60 * 1000 });
-    res.json(token);
+    res.cookie("usersession", token, {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      signed: true,
+    });
+    res.json(userData);
   } catch (err) {
+    console.log(err);
     res.status(400).json(err);
   }
 });

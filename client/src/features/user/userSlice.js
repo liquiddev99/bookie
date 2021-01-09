@@ -10,22 +10,17 @@ const initialState = {
   successMsg: "",
   thumbnail: "",
   cart: null,
+  isLoggedIn: false,
 };
 
 export const fetchUser = createAsyncThunk(
   "user/fetchUser",
   async (userData, { rejectWithValue }) => {
     try {
-      const token = cookie.get("usersession");
-      if (!token) {
-        return rejectWithValue("");
-      }
-      const res = await axios.get("/auth/user", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get("/auth/user");
       return res.data;
     } catch (err) {
-      console.log(err.response.data);
+      console.log(err.response);
       return rejectWithValue(err.response.data);
     }
   }
@@ -48,8 +43,7 @@ export const login = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const res = await axios.post("/auth/login", userData);
-      const decoded = jwt.verify(res.data, process.env.REACT_APP_JWT_SECRET);
-      return decoded;
+      return res.data;
     } catch (err) {
       cookie.remove("usersession");
       return rejectWithValue(err.response.data);
@@ -119,17 +113,21 @@ const userSlice = createSlice({
     },
     [login.fulfilled]: (state, action) => {
       state.username = action.payload.username;
+      state.email = action.payload.email;
+      state.thumbnail = action.payload.thumbnail || "";
       state.errorMsg = "";
+      state.isLoggedIn = true;
     },
     [login.rejected]: (state, action) => {
       state.username = null;
       state.errorMsg = action.payload;
     },
     [fetchUser.fulfilled]: (state, action) => {
-      state.username = action.payload.username;
+      state.username = action.payload.username || "";
       state.thumbnail = action.payload.thumbnail || "";
-      state.email = action.payload.email;
-      state.cart = action.payload.shoppingCart;
+      state.email = action.payload.email || "";
+      state.cart = action.payload.shoppingCart || [];
+      state.isLoggedIn = action.payload.username ? true : false;
     },
     [fetchUser.rejected]: (state, action) => {
       state.username = null;

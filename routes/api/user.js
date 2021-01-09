@@ -16,8 +16,8 @@ router.post("/upload", async (req, res) => {
     name = Date.now() + name;
     data = data.toString("base64");
     data = Buffer.from(data, "base64");
-    const token = req.cookies.usersession;
-    const { _id } = jwt.verify(token, keys.JWT_Secret);
+    const { usersession } = req.signedCookies;
+    const { _id } = jwt.verify(usersession, keys.JWT_Secret);
     const filter = { owner: _id };
     const update = { name, data };
     await Avatar.findOneAndUpdate(filter, update, {
@@ -29,7 +29,7 @@ router.post("/upload", async (req, res) => {
     return res.json("Image uploaded");
   } catch (err) {
     console.log(err, "Error upload image");
-    return res.json("Can't upload image, please try again");
+    return res.status(400).json("Can't upload image, please try again");
   }
 });
 
