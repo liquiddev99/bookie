@@ -4,8 +4,6 @@ const app = express();
 const passport = require("passport");
 const cookieParser = require("cookie-parser");
 const upload = require("express-fileupload");
-const helmet = require("helmet");
-const compression = require("compression");
 
 const keys = require("./config/keys");
 const PORT = process.env.PORT || 5000;
@@ -22,8 +20,6 @@ app.use(cookieParser(keys.cookieKey));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(upload());
-app.use(helmet());
-app.use(compression());
 
 mongoose
   .connect(keys.DBURL, {
