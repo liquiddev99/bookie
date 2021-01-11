@@ -18,7 +18,7 @@ import userReducer from "../features/user/userSlice";
 const userPersistConfig = {
   key: "user",
   storage,
-  whitelist: ["isLoggedIn"],
+  blacklist: ["errorMsg", "successMsg"],
 };
 
 export const store = configureStore({

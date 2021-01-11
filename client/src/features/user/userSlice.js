@@ -18,7 +18,6 @@ export const fetchUser = createAsyncThunk(
       const res = await axios.get("/auth/user");
       return res.data;
     } catch (err) {
-      console.log(err.response);
       return rejectWithValue(err.response.data);
     }
   }
@@ -104,6 +103,7 @@ const userSlice = createSlice({
       state.thumbnail = "";
       state.errorMsg = action.payload;
       state.isLoggedIn = false;
+      state.cart = [];
     },
     [addToCart.fulfilled]: (state, action) => {
       state.cart = action.payload;

@@ -8,6 +8,11 @@ const ObjectId = require("mongoose").Types.ObjectId;
 const User = require("../../models/User");
 const { authSignup } = require("../../middleware/auth");
 const keys = require("../../config/keys");
+const {
+  verifyRefreshToken,
+  setCookie,
+  generateJWT,
+} = require("../../helpers/authHelper");
 
 // OAuth
 router.get(
@@ -25,18 +30,16 @@ router.get(
       await User.updateOne({ _id }, { $push: { cart: { $each: cartCookie } } });
       res.clearCookie("cart");
     }
-    const token = jwt.sign(
-      { username, email, thumbnail, _id },
+    const token = generateJWT(
+      { _id, username, email, thumbnail },
       keys.JWT_Secret,
-      {
-        expiresIn: "7d",
-      }
+      "1d"
     );
-    res.cookie("usersession", token, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      signed: true,
-      httpOnly: true,
+    const refreshToken = jwt.sign({ _id }, keys.REFRESH_TOKEN, {
+      expiresIn: "1y",
     });
+    setCookie(res, "usersession", token, 1);
+    setCookie(res, "refreshToken", refreshToken, 365);
     res.redirect("/");
   }
 );
@@ -53,18 +56,14 @@ router.get(
       await User.updateOne({ _id }, { $push: { cart: { $each: cartCookie } } });
       res.clearCookie("cart");
     }
-    const token = jwt.sign(
+    const token = generateJWT(
       { username, email, thumbnail, _id },
       keys.JWT_Secret,
-      {
-        expiresIn: "7d",
-      }
+      "1d"
     );
-    res.cookie("usersession", token, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
-      signed: true,
-    });
+    const refreshToken = generateJWT({ _id }, keys.REFRESH_TOKEN, "1y");
+    setCookie(res, "usersession", token, 1);
+    setCookie(res, "refreshToken", refreshToken, 365);
     res.redirect("/");
   }
 );
@@ -72,6 +71,7 @@ router.get(
 router.get("/logout", (req, res) => {
   req.logout();
   res.clearCookie("usersession");
+  res.clearCookie("refreshToken");
   res.redirect("/");
 });
 
@@ -83,8 +83,11 @@ router.get("/user", async (req, res) => {
       cart = JSON.parse(cart);
       return res.json({ shoppingCart: cart, isLoggedIn: false });
     }
-    const { _id } = jwt.verify(usersession, keys.JWT_Secret);
-    const { username, email, thumbnail } = await User.findById(_id);
+    const { _id, username, email, thumbnail } = jwt.verify(
+      usersession,
+      keys.JWT_Secret
+    );
+    // const { username, email, thumbnail } = await User.findById(_id);
     const shoppingCart = await User.aggregate([
       {
         $match: { _id: ObjectId(_id) },
@@ -98,15 +101,56 @@ router.get("/user", async (req, res) => {
         },
       },
     ]);
-    res.json({ username, email, thumbnail, shoppingCart, isLoggedIn: true });
+    return res.json({
+      username,
+      email,
+      thumbnail,
+      shoppingCart,
+      isLoggedIn: true,
+    });
   } catch (err) {
-    console.log(err);
-    if (err.message === "jwt expired") {
-      res.clearCookie("usersession");
-      return res
-        .status(400)
-        .json("You have reached the end of your session, please re-login");
+    if (err.name === "TokenExpiredError") {
+      try {
+        const { refreshToken } = req.signedCookies;
+        const _id = await verifyRefreshToken(refreshToken, keys.REFRESH_TOKEN);
+        console.log("Create new accessToken");
+        const { username, email, thumbnail } = await User.findById(_id);
+        const shoppingCart = await User.aggregate([
+          {
+            $match: { _id: ObjectId(_id) },
+          },
+          { $project: { cart: 1, _id: 0 } },
+          { $unwind: "$cart" },
+          {
+            $group: {
+              _id: "$cart.id",
+              total: { $sum: "$cart.amount" },
+            },
+          },
+        ]);
+        const userData = {
+          _id,
+          username,
+          email,
+          thumbnail: thumbnail || "",
+        };
+        const token = generateJWT(userData, keys.JWT_Secret, "1d");
+        setCookie(res, "usersession", token, 1);
+        return res.json({
+          username,
+          email,
+          thumbnail,
+          shoppingCart,
+          isLoggedIn: true,
+        });
+      } catch (err) {
+        res.clearCookie("usersession");
+        res.clearCookie("refreshToken");
+        return res.status(400).json("");
+      }
     }
+    res.clearCookie("usersession");
+    res.clearCookie("refreshToken");
     return res
       .status(401)
       .json("Some thing went wrong with your credentials, please re-login");
@@ -189,14 +233,10 @@ router.post("/login", async (req, res) => {
       await User.updateOne({ _id }, { $push: { cart: { $each: cartCookie } } });
       res.clearCookie("cart");
     }
-    const token = jwt.sign(userData, keys.JWT_Secret, {
-      expiresIn: "7d",
-    });
-    res.cookie("usersession", token, {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
-      signed: true,
-    });
+    const token = generateJWT(userData, keys.JWT_Secret, "1d");
+    const refreshToken = generateJWT({ _id }, keys.REFRESH_TOKEN, "1y");
+    setCookie(res, "usersession", token, 1);
+    setCookie(res, "refreshToken", refreshToken, 365);
     res.json(userData);
   } catch (err) {
     console.log(err);

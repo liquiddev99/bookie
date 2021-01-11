@@ -98,7 +98,8 @@ router.post("/purchase", async (req, res) => {
     ]);
     return res.json(shoppingCart);
   } catch (err) {
-    console.log(err);
+    res.clearCookie("usersession");
+    res.clearCookie("refreshToken");
     return res.status(401).json("Can't purchase goods now, please re-login");
   }
 });
