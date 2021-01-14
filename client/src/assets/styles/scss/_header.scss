@@ -170,6 +170,8 @@
     font-size: calc(1rem + 0.2vw);
     font-weight: bold;
     text-transform: uppercase;
+    text-decoration: none;
+    color: white;
   }
   &--account {
     @include mobile {

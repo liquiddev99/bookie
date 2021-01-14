@@ -131,7 +131,7 @@ const Header = (props) => {
           </a>
         </div>
         <div className="header__user">
-          <div className="header__user--cart">
+          <Link to="/checkout" className="header__user--cart">
             <div className="header__user--cart__icon">
               <i className="fas fa-shopping-cart"></i>
             </div>
@@ -139,7 +139,7 @@ const Header = (props) => {
             <div className="header__user--cart__quantity">
               {cart ? cart.length : 0}
             </div>
-          </div>
+          </Link>
           <div className="header__user--img">
             {thumbnail ? <img src={`${thumbnail}`} alt="avatar" /> : null}
           </div>

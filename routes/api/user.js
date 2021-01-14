@@ -4,7 +4,9 @@ const ObjectId = require("mongoose").Types.ObjectId;
 
 const Avatar = require("../../models/Avatar");
 const User = require("../../models/User");
+const Book = require("../../models/Book");
 const keys = require("../../config/keys");
+const { setCookie } = require("../../helpers/authHelper");
 
 router.post("/upload", async (req, res) => {
   if (!req.files) {
@@ -47,7 +49,6 @@ router.post("/purchase", async (req, res) => {
   try {
     const { usersession } = req.signedCookies;
     const { id, amount } = req.body;
-    console.log(usersession);
     if (!usersession) {
       let { cart } = req.signedCookies;
       console.log(cart);
@@ -55,52 +56,81 @@ router.post("/purchase", async (req, res) => {
         cart = JSON.parse(cart);
         const index = cart.findIndex((e) => e.id === id);
         if (index === -1) {
-          cart.push({ id, amount });
-          res.cookie("cart", JSON.stringify(cart), {
-            maxAge: 15 * 3600 * 24 * 1000,
-            httpOnly: true,
-            signed: true,
+          const { title, price, old_price, imgURL } = await Book.findById(id);
+          cart.push({
+            _id: id,
+            total: amount,
+            title,
+            price,
+            old_price,
+            imgURL,
           });
+          setCookie(res, "cart", JSON.stringify(cart), 15);
           return res.json(cart);
         } else {
-          cart[index].amount += amount;
-          res.cookie("cart", JSON.stringify(cart), {
-            maxAge: 15 * 3600 * 24 * 1000,
-            httpOnly: true,
-            signed: true,
-          });
+          cart[index].total += amount;
+          setCookie(res, "cart", JSON.stringify(cart), 15);
           return res.json(cart);
         }
       } else {
-        cart = [{ id, amount }];
-        res.cookie("cart", JSON.stringify(cart), {
-          maxAge: 15 * 3600 * 24 * 1000,
-          httpOnly: true,
-          signed: true,
-        });
+        const { title, price, old_price, imgURL } = await Book.findById(id);
+        cart = [{ _id: id, total: amount, title, price, old_price, imgURL }];
+        setCookie(res, "cart", JSON.stringify(cart), 15);
         return res.json(cart);
       }
     }
     const { _id } = jwt.verify(usersession, keys.JWT_Secret);
-    await User.updateOne({ _id }, { $push: { cart: { id, amount } } });
-    const shoppingCart = await User.aggregate([
-      {
-        $match: { _id: ObjectId(_id) },
-      },
-      { $project: { cart: 1, _id: 0 } },
-      { $unwind: "$cart" },
-      {
-        $group: {
-          _id: "$cart.id",
-          total: { $sum: "$cart.amount" },
+    const existingProduct = await User.findOne({ _id, "cart._id": id });
+    let user;
+    if (existingProduct) {
+      user = await User.findOneAndUpdate(
+        { _id, "cart._id": id },
+        { $inc: { "cart.$.total": amount } },
+        { new: true }
+      );
+    } else {
+      const { title, price, old_price, imgURL } = await Book.findById(id);
+      user = await User.findByIdAndUpdate(
+        { _id },
+        {
+          $push: {
+            cart: { _id: id, total: amount, title, price, old_price, imgURL },
+          },
         },
-      },
-    ]);
-    return res.json(shoppingCart);
+        { new: true }
+      );
+    }
+    console.log(user);
+    return res.json(user.cart);
   } catch (err) {
+    console.log(err, "error line 94 user.js");
     res.clearCookie("usersession");
     res.clearCookie("refreshToken");
     return res.status(401).json("Can't purchase goods now, please re-login");
+  }
+});
+
+router.post("/updateCart", async (req, res) => {
+  try {
+    const { id, amount } = req.body;
+    const { usersession } = req.signedCookies;
+    if (!usersession) {
+      let { cart } = req.signedCookies;
+      cart = JSON.parse(cart);
+      const index = cart.findIndex((e) => e._id === id);
+      cart[index].total = amount;
+      setCookie(res, "cart", JSON.stringify(cart), 15);
+      return res.json(cart);
+    }
+    const { _id } = jwt.verify(usersession, keys.JWT_Secret);
+    const user = await User.findOneAndUpdate(
+      { _id, "cart._id": id },
+      { $set: { "cart.$.total": parseInt(amount) } },
+      { new: true }
+    );
+    return res.json(user.cart);
+  } catch (err) {
+    console.log(err, "line 127 user.js");
   }
 });
 

@@ -3,7 +3,6 @@ const router = express.Router();
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
-const ObjectId = require("mongoose").Types.ObjectId;
 
 const User = require("../../models/User");
 const { authSignup } = require("../../middleware/auth");
@@ -81,31 +80,16 @@ router.get("/user", async (req, res) => {
     if (!usersession) {
       let cart = req.signedCookies.cart || "[]";
       cart = JSON.parse(cart);
-      return res.json({ shoppingCart: cart, isLoggedIn: false });
+      console.log(cart, "line 84 auth.js");
+      return res.json({ cart, isLoggedIn: false });
     }
-    const { _id, username, email, thumbnail } = jwt.verify(
-      usersession,
-      keys.JWT_Secret
-    );
-    // const { username, email, thumbnail } = await User.findById(_id);
-    const shoppingCart = await User.aggregate([
-      {
-        $match: { _id: ObjectId(_id) },
-      },
-      { $project: { cart: 1, _id: 0 } },
-      { $unwind: "$cart" },
-      {
-        $group: {
-          _id: "$cart.id",
-          total: { $sum: "$cart.amount" },
-        },
-      },
-    ]);
+    const { _id } = jwt.verify(usersession, keys.JWT_Secret);
+    const { username, email, thumbnail, cart } = await User.findById(_id);
     return res.json({
       username,
       email,
       thumbnail,
-      shoppingCart,
+      cart,
       isLoggedIn: true,
     });
   } catch (err) {
@@ -114,20 +98,7 @@ router.get("/user", async (req, res) => {
         const { refreshToken } = req.signedCookies;
         const _id = await verifyRefreshToken(refreshToken, keys.REFRESH_TOKEN);
         console.log("Create new accessToken");
-        const { username, email, thumbnail } = await User.findById(_id);
-        const shoppingCart = await User.aggregate([
-          {
-            $match: { _id: ObjectId(_id) },
-          },
-          { $project: { cart: 1, _id: 0 } },
-          { $unwind: "$cart" },
-          {
-            $group: {
-              _id: "$cart.id",
-              total: { $sum: "$cart.amount" },
-            },
-          },
-        ]);
+        const { username, email, thumbnail, cart } = await User.findById(_id);
         const userData = {
           _id,
           username,
@@ -140,7 +111,7 @@ router.get("/user", async (req, res) => {
           username,
           email,
           thumbnail,
-          shoppingCart,
+          cart,
           isLoggedIn: true,
         });
       } catch (err) {
@@ -239,7 +210,7 @@ router.post("/login", async (req, res) => {
     setCookie(res, "refreshToken", refreshToken, 365);
     res.json(userData);
   } catch (err) {
-    console.log(err);
+    console.log(err, "line 249 auth.js");
     res.status(400).json(err);
   }
 });

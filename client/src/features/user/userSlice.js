@@ -61,6 +61,18 @@ export const addToCart = createAsyncThunk(
   }
 );
 
+export const updateCart = createAsyncThunk(
+  "user/updateCart",
+  async ({ id, amount }) => {
+    try {
+      const res = await axios.post("/api/updateCart", { id, amount });
+      return res.data;
+    } catch (err) {
+      console.log("Error when update cart");
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -94,7 +106,7 @@ const userSlice = createSlice({
       state.username = action.payload.username || "";
       state.thumbnail = action.payload.thumbnail || "";
       state.email = action.payload.email || "";
-      state.cart = action.payload.shoppingCart || [];
+      state.cart = action.payload.cart || [];
       state.isLoggedIn = action.payload.isLoggedIn;
     },
     [fetchUser.rejected]: (state, action) => {
@@ -106,6 +118,9 @@ const userSlice = createSlice({
       state.cart = [];
     },
     [addToCart.fulfilled]: (state, action) => {
+      state.cart = action.payload;
+    },
+    [updateCart.fulfilled]: (state, action) => {
       state.cart = action.payload;
     },
   },
