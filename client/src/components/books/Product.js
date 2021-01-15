@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { updateCart } from "../../features/user/userSlice";
+import { updateCart, deleteCart } from "../../features/user/userSlice";
 
 const Product = (props) => {
   const dispatch = useDispatch();
@@ -31,7 +31,7 @@ const Product = (props) => {
 
   return (
     <div className="checkout__product">
-      <i className="fas fa-times"></i>
+      <i className="fas fa-times" onClick={() => dispatch(deleteCart(id))}></i>
       <Link to={`/book/${id}`} className="checkout__product--img">
         <img src={props.imgURL} alt="Product" />
       </Link>

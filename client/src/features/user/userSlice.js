@@ -73,6 +73,15 @@ export const updateCart = createAsyncThunk(
   }
 );
 
+export const deleteCart = createAsyncThunk("user/deleteCart", async (id) => {
+  try {
+    const res = await axios.delete("/api/deleteCart", { data: { id } });
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -121,6 +130,9 @@ const userSlice = createSlice({
       state.cart = action.payload;
     },
     [updateCart.fulfilled]: (state, action) => {
+      state.cart = action.payload;
+    },
+    [deleteCart.fulfilled]: (state, action) => {
       state.cart = action.payload;
     },
   },

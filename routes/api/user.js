@@ -133,4 +133,28 @@ router.post("/updateCart", async (req, res) => {
   }
 });
 
+router.delete("/deleteCart", async (req, res) => {
+  try {
+    const { id } = req.body;
+    const { usersession } = req.signedCookies;
+    if (!usersession) {
+      let { cart } = req.signedCookies;
+      cart = JSON.parse(cart);
+      cart = cart.filter((item) => item._id !== id);
+      setCookie(res, "cart", JSON.stringify(cart), 15);
+      return res.json(cart);
+    }
+    const { _id } = jwt.verify(usersession, keys.JWT_Secret);
+    const user = await User.findByIdAndUpdate(
+      _id,
+      { $pull: { cart: { _id: id } } },
+      { new: true }
+    );
+    return res.json(user.cart);
+  } catch (err) {
+    console.log(err, "deleteCart func user.js");
+    res.json(err.response.data);
+  }
+});
+
 module.exports = router;

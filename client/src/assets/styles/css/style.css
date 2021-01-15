@@ -2268,6 +2268,10 @@
   opacity: 0.7;
 }
 
+.checkout__product--img {
+  margin-right: 1rem;
+}
+
 .checkout__product--img img {
   width: 100%;
 }
@@ -2340,8 +2344,8 @@
 
 .checkout__pay--button {
   width: min-content;
-  padding: 1rem 0rem;
-  margin: 1.7rem 0;
+  padding: 0.5rem 0rem;
+  margin: 1.5rem 0;
   width: 28%;
   font-size: calc(1.7rem + 1vw);
   cursor: pointer;
@@ -2351,5 +2355,10 @@
   color: white;
   border-radius: 3rem;
   font-weight: bold;
+  transition: all 0.5s;
+}
+
+.checkout__pay--button:hover {
+  scale: 1.05;
 }
 /*# sourceMappingURL=style.css.map */
