@@ -16,9 +16,17 @@ const Book = (props) => {
       </Link>
       <div className="book__content">
         <div className="book__content--name">{props.title}</div>
-        <div className="book__content--price">{props.price.toFixed(3)} đ</div>
+        <div className="book__content--price">
+          {(props.price * 1000).toLocaleString("vi-VN", {
+            style: "currency",
+            currency: "VND",
+          })}
+        </div>
         <div className="book__content--old-price">
-          {props.old_price.toFixed(3)} đ
+          {(props.old_price * 1000).toLocaleString("vi-VN", {
+            style: "currency",
+            currency: "VND",
+          })}
         </div>
         {props.hideButton ? null : (
           <button

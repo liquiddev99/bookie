@@ -112,10 +112,16 @@ const BookDetail = (props) => {
 
               <div className="book-detail__content--price">
                 <p className="book-detail__content--price__special">
-                  {parseFloat(book.price).toFixed(3)} đ
+                  {parseFloat(book.price * 1000).toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  })}
                 </p>
                 <p className="book-detail__content--price__old">
-                  {parseFloat(book.old_price).toFixed(3)} đ
+                  {parseFloat(book.old_price * 1000).toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  })}
                 </p>
               </div>
 

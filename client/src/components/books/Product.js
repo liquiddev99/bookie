@@ -9,6 +9,11 @@ const Product = (props) => {
   const id = props.id;
   const [amount, setAmount] = useState(props.amount);
 
+  const formatter = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  });
+
   const handleChange = (e) => {
     if (isNaN(e.target.value)) {
       setAmount(props.amount);
@@ -21,7 +26,6 @@ const Product = (props) => {
     if (!e.target.value) {
       setAmount(props.amount);
     }
-    console.log(amount);
     dispatch(updateCart({ id, amount }));
   };
 
@@ -34,10 +38,10 @@ const Product = (props) => {
       <div className="checkout__product--detail">
         <p className="checkout__product--detail__name">{props.title}</p>
         <p className="checkout__product--detail__price">
-          {parseFloat(props.price).toFixed(3)} đ
+          {formatter.format(parseFloat(props.price) * 1000)}
         </p>
         <p className="checkout__product--detail__old-price">
-          {parseFloat(props.old_price).toFixed(3)} đ
+          {formatter.format(parseFloat(props.old_price) * 1000)}
         </p>
       </div>
       <div className="checkout__product--amount">
@@ -49,7 +53,7 @@ const Product = (props) => {
         />
         <p className="checkout__product--amount__total">Total:</p>
         <p className="checkout__product--amount__money">
-          {parseFloat(amount * props.price).toFixed(3)} đ
+          {formatter.format(parseFloat(amount * props.price) * 1000)}
         </p>
       </div>
     </div>

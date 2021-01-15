@@ -80,7 +80,6 @@ router.get("/user", async (req, res) => {
     if (!usersession) {
       let cart = req.signedCookies.cart || "[]";
       cart = JSON.parse(cart);
-      console.log(cart, "line 84 auth.js");
       return res.json({ cart, isLoggedIn: false });
     }
     const { _id } = jwt.verify(usersession, keys.JWT_Secret);

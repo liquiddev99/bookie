@@ -2,7 +2,8 @@
   grid-column: 1 / -1;
   width: 85%;
   margin: 0 auto;
-
+  display: flex;
+  flex-direction: column;
   &__title {
     margin: 1.5rem 0;
     font-size: calc(1.6rem + 0.8vw);
@@ -63,6 +64,41 @@
         font-size: calc(0.5rem + 0.9vw);
         font-weight: bold;
       }
+    }
+  }
+
+  &__pay {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 2rem;
+    &--total {
+      display: flex;
+      justify-content: space-between;
+      width: fit-content;
+      p {
+        font-size: calc(1.5rem + 1vw);
+        margin-right: calc(1.5rem + 1.2vw);
+      }
+      div {
+        font-size: calc(1.5rem + 1vw);
+        color: #f9971e;
+        font-weight: bold;
+      }
+    }
+    &--button {
+      width: min-content;
+      padding: 1rem 0rem;
+      margin: 1.7rem 0;
+      width: 28%;
+      font-size: calc(1.7rem + 1vw);
+      cursor: pointer;
+      outline: none;
+      border: none;
+      background-color: color(color-green);
+      color: white;
+      border-radius: 3rem;
+      font-weight: bold;
     }
   }
 }

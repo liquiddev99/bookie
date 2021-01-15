@@ -100,7 +100,6 @@ router.post("/purchase", async (req, res) => {
         { new: true }
       );
     }
-    console.log(user);
     return res.json(user.cart);
   } catch (err) {
     console.log(err, "error line 94 user.js");
