@@ -180,6 +180,7 @@
     &__icon {
       font-size: 2.5rem;
       margin-right: 1rem;
+      cursor: pointer;
     }
     @include tablet {
       margin-right: 0;
@@ -228,10 +229,12 @@
     }
   }
   &--img-left {
+    display: none;
     img {
       display: none;
     }
     @include mobile {
+      display: block;
       img {
         display: block;
       }
