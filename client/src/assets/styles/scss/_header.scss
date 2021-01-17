@@ -12,7 +12,7 @@
     grid-template-columns: 4fr 1fr 4fr;
   }
   @include mobile {
-    grid-template-columns: 4fr 1fr 6fr;
+    grid-template-columns: 2.5fr 3.5fr 2fr 6fr;
   }
 }
 .header__hamburger {
@@ -203,7 +203,7 @@
       margin-right: 0;
     }
     &__quantity {
-      font-size: calc(1rem + 0.5vw);
+      font-size: calc(1rem + 0.4vw);
       padding: 0.2rem 0.4rem;
       border-radius: 0.5rem;
       background-color: red;
@@ -213,7 +213,8 @@
       top: -0.5rem;
     }
   }
-  &--img {
+  &--img-left,
+  &--img-right {
     text-align: center;
     max-width: 4.6rem;
     img {
@@ -224,6 +225,22 @@
 
     @include small-tablet {
       padding: 0;
+    }
+  }
+  &--img-left {
+    img {
+      display: none;
+    }
+    @include mobile {
+      img {
+        display: block;
+      }
+    }
+  }
+  &--img-right {
+    display: block;
+    @include mobile {
+      display: none;
     }
   }
 
@@ -244,7 +261,7 @@
     transform: scaleY(0);
     transform-origin: top;
     transition: all 0.5s;
-    z-index: 1;
+    z-index: 3;
     @include mobile {
       width: 25rem;
       text-align: center;

@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
 import { Link, withRouter } from "react-router-dom";
 
-import { toggleSidebar } from "../../features/ui/uiSlice";
+import { toggleSidebar, toggleAccount } from "../../features/ui/uiSlice";
 import { searchBooks } from "../../features/books/booksSlice";
-import { fetchUser, clearStatus } from "../../features/user/userSlice";
+import { fetchUser } from "../../features/user/userSlice";
 
 import Auth from "../auth/Auth";
 
@@ -15,13 +15,13 @@ const Header = (props) => {
   const { username, thumbnail, cart, isLoggedIn } = useSelector(
     (state) => state.user
   );
-  const [account, setAccount] = useState(false);
+  const { account } = useSelector((state) => state.ui);
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
 
   const onOpenModal = () => {
     setOpen(true);
-    setAccount(false);
+    dispatch(toggleAccount());
   };
   const onCloseModal = () => {
     setOpen(false);
@@ -45,31 +45,29 @@ const Header = (props) => {
   };
 
   // Toogle Account Dropdown
-  const toggleAccount = () => {
-    setAccount(!account);
-    dispatch(clearStatus());
-  };
+  // const toggleAccount = () => {
+  //   setAccount(!account);
+  //   dispatch(clearStatus());
+  // };
 
   // When click outside, close the account dropdown
-  const ref = useRef();
-  const handleClick = useCallback(
-    (e) => {
-      if (
-        ref.current.classList.contains("active") &&
-        !ref.current.contains(e.target)
-      ) {
-        setAccount(!account);
-      }
-    },
-    [account]
-  );
+  const ref = useRef(null);
+  const handleClick = (e) => {
+    if (
+      ref.current.classList.contains("active") &&
+      !ref.current.contains(e.target) &&
+      account
+    ) {
+      dispatch(toggleAccount());
+    }
+  };
   useEffect(() => {
     document.addEventListener("click", handleClick);
     dispatch(fetchUser());
     return () => {
       document.removeEventListener("click", handleClick);
     };
-  }, [dispatch, handleClick]);
+  }, [dispatch, ref, account]);
 
   return (
     <header id="header">
@@ -79,6 +77,9 @@ const Header = (props) => {
           onClick={() => dispatch(toggleSidebar())}
         >
           <i className="fas fa-bars"></i>
+        </div>
+        <div className="header__user--img-left">
+          {thumbnail ? <img src={`${thumbnail}`} alt="avatar" /> : null}
         </div>
         <div
           className="header__categories"
@@ -142,17 +143,20 @@ const Header = (props) => {
             ) : null}
           </Link>
           {thumbnail ? (
-            <div className="header__user--img">
+            <div className="header__user--img-right">
               <img src={`${thumbnail}`} alt="avatar" />
             </div>
           ) : null}
 
-          <div className="header__user--account" onClick={toggleAccount}>
+          <div
+            className="header__user--account"
+            onClick={() => dispatch(toggleAccount())}
+          >
             <div className="header__user--account__icon">
               {isLoggedIn ? (
-                <i class="fas fa-user"></i>
+                <i className="fas fa-user"></i>
               ) : (
-                <i class="fas fa-sign-in-alt"></i>
+                <i className="fas fa-sign-in-alt"></i>
               )}
             </div>
             <div className="header__user--account__dropdown-icon">
@@ -166,7 +170,7 @@ const Header = (props) => {
             {username ? (
               <>
                 <Link
-                  onClick={toggleAccount}
+                  onClick={() => dispatch(toggleAccount())}
                   className="header__user--dropdown__account"
                   to="/account"
                 >
