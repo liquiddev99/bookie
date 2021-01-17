@@ -9,11 +9,15 @@
   grid-template-columns: 1fr 2fr 1fr 3fr;
   gap: 1.5rem;
   @include small-tablet {
-    grid-template-columns: 3fr 1fr 3fr;
+    grid-template-columns: 4fr 1fr 4fr;
+  }
+  @include mobile {
+    grid-template-columns: 4fr 1fr 6fr;
   }
 }
 .header__hamburger {
   display: none;
+  width: min-content;
   @include small-tablet {
     display: block;
   }
@@ -148,22 +152,19 @@
 }
 
 .header__user {
-  display: grid;
-  grid-template-columns:
-    minmax(13rem, min-content) minmax(min-content, max-content)
-    minmax(11.5rem, min-content);
+  display: flex;
   gap: 0.5rem;
-  justify-content: end;
+  justify-content: flex-end;
   color: white;
   position: relative;
   @include mobile {
-    grid-template-columns: minmax(5rem, min-content);
+    justify-content: space-around;
   }
   &--cart,
   &--account {
     display: flex;
-    padding: 1rem 1.5rem;
-    justify-content: space-between;
+    justify-content: flex-end;
+    align-items: center;
     transition: all 0.2s ease-in-out;
     cursor: pointer;
     border-radius: 0.4rem;
@@ -174,39 +175,58 @@
     color: white;
   }
   &--account {
+    padding: 0 1rem;
+    margin-right: 2rem;
+    &__icon {
+      font-size: 2.5rem;
+      margin-right: 1rem;
+    }
+    @include tablet {
+      margin-right: 0;
+    }
     @include mobile {
-      display: none;
+      padding-left: 0;
+      &__icon {
+        margin-right: 0;
+      }
     }
   }
   &--cart {
-    @include mobile {
-      font-size: 1.4rem;
-      justify-content: center;
-      &__icon {
-        margin-right: 1rem;
-      }
+    font-size: 2.2rem;
+    width: min-content;
+    position: relative;
+    margin-right: 2rem;
+    @include small-tablet {
+      margin-right: 1rem;
     }
-    &__content {
-      @include mobile {
-        display: none;
-      }
+    @include mobile {
+      margin-right: 0;
+    }
+    &__quantity {
+      font-size: calc(1rem + 0.5vw);
+      padding: 0.2rem 0.4rem;
+      border-radius: 0.5rem;
+      background-color: red;
+      z-index: 1;
+      position: absolute;
+      right: -0.7rem;
+      top: -0.5rem;
     }
   }
   &--img {
     text-align: center;
-    width: 100%;
+    max-width: 4.6rem;
     img {
       border-radius: 50%;
       width: 75%;
-      max-width: 4.6rem;
       height: auto;
+    }
+
+    @include small-tablet {
+      padding: 0;
     }
   }
 
-  &--cart:hover {
-    background-color: white;
-    color: black;
-  }
   &--account:hover {
     color: color(color-green);
     background-color: white;
@@ -226,7 +246,9 @@
     transition: all 0.5s;
     z-index: 1;
     @include mobile {
-      display: none;
+      width: 25rem;
+      text-align: center;
+      padding: 1rem;
     }
     li {
       padding-bottom: 2rem;
@@ -238,6 +260,9 @@
       }
       a:hover {
         color: color(color-green);
+      }
+      @include mobile {
+        padding-bottom: 1rem;
       }
     }
     li:hover {

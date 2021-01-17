@@ -12,7 +12,9 @@ import Auth from "../auth/Auth";
 const Header = (props) => {
   const dispatch = useDispatch();
   const { searchedBooks } = useSelector((state) => state.books);
-  const { username, thumbnail, cart } = useSelector((state) => state.user);
+  const { username, thumbnail, cart, isLoggedIn } = useSelector(
+    (state) => state.user
+  );
   const [account, setAccount] = useState(false);
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
@@ -135,16 +137,24 @@ const Header = (props) => {
             <div className="header__user--cart__icon">
               <i className="fas fa-shopping-cart"></i>
             </div>
-            <div className="header__user--cart__content">My Cart</div>
-            <div className="header__user--cart__quantity">
-              {cart ? cart.length : 0}
-            </div>
+            {cart.length ? (
+              <div className="header__user--cart__quantity">{cart.length}</div>
+            ) : null}
           </Link>
-          <div className="header__user--img">
-            {thumbnail ? <img src={`${thumbnail}`} alt="avatar" /> : null}
-          </div>
+          {thumbnail ? (
+            <div className="header__user--img">
+              <img src={`${thumbnail}`} alt="avatar" />
+            </div>
+          ) : null}
+
           <div className="header__user--account" onClick={toggleAccount}>
-            <div className="header__user--account__content">Account</div>
+            <div className="header__user--account__icon">
+              {isLoggedIn ? (
+                <i class="fas fa-user"></i>
+              ) : (
+                <i class="fas fa-sign-in-alt"></i>
+              )}
+            </div>
             <div className="header__user--account__dropdown-icon">
               <i className="fas fa-caret-down"></i>
             </div>
