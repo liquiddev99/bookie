@@ -59,7 +59,7 @@ $colors: (
 .scroll {
   display: none;
   position: fixed;
-  z-index: 10;
+  z-index: 3;
   color: white;
   right: calc(1vw + 1rem);
   bottom: calc(1vw + 1rem);
@@ -93,3 +93,4 @@ $colors: (
 @import "login";
 @import "account";
 @import "checkout";
+@import "payment";

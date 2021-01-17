@@ -51,10 +51,9 @@ router.post("/purchase", async (req, res) => {
     const { id, amount } = req.body;
     if (!usersession) {
       let { cart } = req.signedCookies;
-      console.log(cart);
       if (cart) {
         cart = JSON.parse(cart);
-        const index = cart.findIndex((e) => e.id === id);
+        const index = cart.findIndex((e) => e._id === id);
         if (index === -1) {
           const { title, price, old_price, imgURL } = await Book.findById(id);
           cart.push({

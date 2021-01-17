@@ -11,9 +11,9 @@ import ScrollToTop from "./components/layouts/ScrollToTop";
 import BookDetail from "./components/books/BookDetail";
 import Account from "./components/user/Account";
 import Checkout from "./components/books/Checkout";
+import Payment from "./components/books/Payment";
 
 function App(props) {
-  // console.log(props.auth);
   return (
     <div className="App">
       <NavBar />
@@ -23,7 +23,8 @@ function App(props) {
           <Route path="/books/search" component={BooksSearch} />
           <Route path="/account" component={Account} />
           <Route path="/book/:id" component={BookDetail} />
-          <Route path="/checkout" component={Checkout} />
+          <Route path="/checkout/payment" component={Payment} />
+          <Route path="/checkout" component={Checkout} exact />
           <Route path="/" component={Landing} exact />
         </Switch>
       </main>

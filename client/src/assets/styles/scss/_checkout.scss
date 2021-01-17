@@ -92,17 +92,37 @@
       padding: 0.5rem 0rem;
       margin: 1.5rem 0;
       width: 28%;
-      font-size: calc(1.7rem + 1vw);
+      font-size: calc(1.4rem + 0.8vw);
       cursor: pointer;
-      outline: none;
-      border: none;
       background-color: color(color-green);
       color: white;
       border-radius: 3rem;
       font-weight: bold;
+      text-decoration: none;
+      text-align: center;
       transition: all 0.5s;
     }
     &--button:hover {
+      scale: 1.05;
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    &--text {
+      font-size: calc(1.5rem + 1vw);
+      margin-bottom: 2rem;
+    }
+    &--link {
+      background-color: color(color-green);
+      color: white;
+      padding: 1rem 2rem;
+      text-decoration: none;
+      font-size: calc(1rem + 0.7vw);
+      border-radius: 2rem;
+      transition: all 0.5s;
+    }
+    &--link:hover {
       scale: 1.05;
     }
   }
