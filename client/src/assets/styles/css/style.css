@@ -299,6 +299,7 @@
   padding: 0 1rem;
   margin-right: 2rem;
   position: relative;
+  cursor: pointer;
 }
 
 .header__user--account__icon {

@@ -6,8 +6,6 @@ import { Link, withRouter } from "react-router-dom";
 import { toggleSidebar, toggleAccount } from "../../features/ui/uiSlice";
 import { searchBooks } from "../../features/books/booksSlice";
 import { fetchUser } from "../../features/user/userSlice";
-// import { ClickOutSide } from "reactjs-click-outside";
-import OutsideClickHandler from "react-outside-click-handler";
 
 import Auth from "../auth/Auth";
 
@@ -53,8 +51,11 @@ const Header = (props) => {
   // };
 
   // When click outside, close the account dropdown
+  const handleClick = () => {
+    dispatch(toggleAccount());
+  };
   const ref = useRef();
-  const handleClick = (e) => {
+  const handleClickOutSide = (e) => {
     if (
       ref.current.classList.contains("active") &&
       !ref.current.contains(e.target) &&
@@ -65,20 +66,11 @@ const Header = (props) => {
     }
     console.log(e.target);
   };
-  // const handleClickOutSide = (e) => {
-  //   if (ref.current.classList.contains("active") && account) {
-  //     dispatch(toggleAccount());
-  //     console.log("dispatch");
-  //   }
-  //   console.log("outside");
-  //   console.log(account, "account");
-  //   console.log(ref.current.classList);
-  // };
   useEffect(() => {
-    document.addEventListener("click", handleClick);
+    document.addEventListener("click", handleClickOutSide);
     dispatch(fetchUser());
     return () => {
-      document.removeEventListener("click", handleClick);
+      document.removeEventListener("click", handleClickOutSide);
     };
   }, [dispatch, account]);
 
@@ -163,7 +155,7 @@ const Header = (props) => {
 
           <div
             className={`header__user--account${account ? " active" : ""}`}
-            onClick={() => dispatch(toggleAccount())}
+            onClick={handleClick}
             ref={ref}
           >
             <div className="header__user--account__icon">
@@ -180,7 +172,7 @@ const Header = (props) => {
               {username ? (
                 <>
                   <Link
-                    onClick={() => dispatch(toggleAccount())}
+                    onClick={handleClick}
                     className="header__user--account__dropdown__account"
                     to="/account"
                   >
