@@ -187,17 +187,15 @@
       margin-right: 0;
     }
     @include mobile {
-      padding-left: 0;
+      padding: 0;
       &__icon {
         margin-right: 0;
       }
     }
     &__dropdown {
       position: absolute;
-      color: black;
       list-style-type: none;
-      padding: 2rem 4rem 2rem 2rem;
-      font-size: 1.2rem;
+      padding: 2rem;
       background-color: white;
       top: 100%;
       right: 1rem;
@@ -206,14 +204,18 @@
       transform-origin: top;
       transition: all 0.5s;
       z-index: 3;
+      width: 30rem;
       @include mobile {
         width: 25rem;
         text-align: center;
         padding: 1rem;
       }
       li {
-        padding-bottom: 2rem;
+        padding-bottom: 1.5rem;
         transition: all 0.2s;
+        color: black;
+        font-size: calc(0.8rem + 0.4vw);
+        font-weight: 500;
         cursor: pointer;
         a {
           text-decoration: none;
@@ -224,6 +226,7 @@
         }
         @include mobile {
           padding-bottom: 1rem;
+          font-size: calc(1rem + 0.4vw);
         }
       }
       li:hover {

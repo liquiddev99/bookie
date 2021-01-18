@@ -110,11 +110,32 @@ const Payment = () => {
       <div className="payment__info">
         <h1>Order infomation</h1>
         {cart.map((item) => (
-          <div className="payment__info--product">
+          <div className="payment__info--product" key={item._id}>
             <div className="payment__info--product__img">
               <img src={item.imgURL} alt="Product" />
             </div>
-            <p className="payment__info--product__title">{item.title}</p>
+            <div className="payment__info--product__info">
+              <p className="payment__info--product__info--title">
+                {item.title}
+              </p>
+              <div className="payment__info--product__info--money">
+                <p className="payment__info--product__info--money__price">
+                  {(item.price * 1000).toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  })}
+                </p>
+                <p className="payment__info--product__info--money__amount">
+                  Qty: {item.total}
+                </p>
+                <p className="payment__info--product__info--money__total">
+                  {(item.price * item.total * 1000).toLocaleString("vi-VN", {
+                    style: "currency",
+                    currency: "VND",
+                  })}
+                </p>
+              </div>
+            </div>
             <div className="payment__info--product__amount">
               <p className="payment__info--product__amount--price">
                 {(item.price * 1000).toLocaleString("vi-VN", {

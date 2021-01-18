@@ -9,6 +9,14 @@
     background-color: white;
     margin: 3rem;
     padding: 2rem;
+    border-radius: 1rem;
+    @include small-tablet {
+      margin: 0;
+      margin-top: 1.5rem;
+    }
+    @include mobile {
+      padding: 1rem;
+    }
 
     &--address {
       margin-top: 1.5rem;
@@ -20,38 +28,91 @@
       input {
         display: block;
         margin-bottom: 2rem;
+        padding: 0.5rem;
       }
       &__country,
       &__region {
         display: block;
         margin-bottom: 1rem;
+        width: 30%;
+        @include small-tablet {
+          width: 60%;
+        }
+        @include mobile {
+          width: 80%;
+        }
       }
     }
   }
   &__info {
     background-color: white;
+    border-radius: 1rem;
     margin: 3rem;
     padding: 2rem;
+    @include small-tablet {
+      margin: 0;
+      margin-top: 1.5rem;
+    }
+    @include mobile {
+      padding: 1rem;
+    }
 
     &--product {
       display: grid;
       grid-template-columns: 1fr 4.5fr 1.5fr;
       margin-top: 2rem;
+      @include tablet {
+        grid-template-columns: 1.5fr 4.5fr 2fr;
+      }
+      @include small-tablet {
+        grid-template-columns: 1fr 2.5fr;
+      }
 
       &__img {
         img {
           width: 100%;
         }
       }
-      &__title {
-        font-size: calc(0.9rem + 0.5vw);
+      &__info {
         margin: 0rem 2rem;
+        @include small-tablet {
+          margin-left: 0;
+        }
+        @include mobile {
+          margin: 0;
+        }
+        &--title {
+          font-size: calc(1.2rem + 0.3vw);
+          margin-bottom: 1rem;
+        }
+        &--money {
+          @include small-tablet(660px) {
+            display: flex;
+          }
+          &__price,
+          &__amount {
+            font-size: calc(1.1rem + 0.3vw);
+            margin-bottom: 0.5rem;
+            margin-right: 1rem;
+          }
+          &__total {
+            font-size: calc(1.1rem + 0.3vw);
+            color: #f9971e;
+            font-weight: bold;
+          }
+        }
       }
       &__amount {
         display: flex;
         justify-content: space-between;
+        @include small-tablet {
+          display: none;
+        }
         p {
-          font-size: calc(0.8rem + 0.5vw);
+          font-size: calc(1rem + 0.4vw);
+        }
+        p:nth-child(2) {
+          margin: 0 1rem;
         }
         &--money {
           color: #f9971e;
@@ -63,19 +124,21 @@
 
   &__confirm {
     display: grid;
+    border-radius: 1rem;
     grid-template-rows: 2fr 1fr;
-    z-index: 4;
-    position: fixed;
-    bottom: 0;
     background-color: white;
-    height: calc(12rem + 10vh);
-    width: 100%;
-    left: 0;
     padding: 1.5rem 3rem;
-    box-shadow: 0rem 1rem 2rem 0.5rem black;
+    margin: 3rem 3rem 0 3rem;
+    @include small-tablet {
+      margin: 0;
+      margin-top: 1.5rem;
+    }
+    @include mobile {
+      padding: 1rem;
+    }
     p {
       margin: 0.5rem 2rem;
-      font-size: calc(1rem + 1vh);
+      font-size: calc(1rem + 0.5vw);
     }
 
     &--money {
@@ -89,7 +152,7 @@
       &__final {
         p:nth-child(2) {
           color: #f9971e;
-          font-size: calc(1.2rem + 1vh);
+          font-size: calc(1.2rem + 0.5vw);
           font-weight: bold;
         }
       }
