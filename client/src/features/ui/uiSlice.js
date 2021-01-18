@@ -12,7 +12,7 @@ const uiSlice = createSlice({
     toggleSidebar(state) {
       state.sideBar = !state.sideBar;
     },
-    toggleAccount(state, action) {
+    toggleAccount(state) {
       state.account = !state.account;
     },
   },

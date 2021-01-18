@@ -6,6 +6,8 @@ import { Link, withRouter } from "react-router-dom";
 import { toggleSidebar, toggleAccount } from "../../features/ui/uiSlice";
 import { searchBooks } from "../../features/books/booksSlice";
 import { fetchUser } from "../../features/user/userSlice";
+// import { ClickOutSide } from "reactjs-click-outside";
+import OutsideClickHandler from "react-outside-click-handler";
 
 import Auth from "../auth/Auth";
 
@@ -51,7 +53,7 @@ const Header = (props) => {
   // };
 
   // When click outside, close the account dropdown
-  const ref = useRef(null);
+  const ref = useRef();
   const handleClick = (e) => {
     if (
       ref.current.classList.contains("active") &&
@@ -59,15 +61,26 @@ const Header = (props) => {
       account
     ) {
       dispatch(toggleAccount());
+      console.log("dispatch");
     }
+    console.log(e.target);
   };
+  // const handleClickOutSide = (e) => {
+  //   if (ref.current.classList.contains("active") && account) {
+  //     dispatch(toggleAccount());
+  //     console.log("dispatch");
+  //   }
+  //   console.log("outside");
+  //   console.log(account, "account");
+  //   console.log(ref.current.classList);
+  // };
   useEffect(() => {
     document.addEventListener("click", handleClick);
     dispatch(fetchUser());
     return () => {
       document.removeEventListener("click", handleClick);
     };
-  }, [dispatch, ref, account]);
+  }, [dispatch, account]);
 
   return (
     <header id="header">
@@ -149,8 +162,9 @@ const Header = (props) => {
           ) : null}
 
           <div
-            className="header__user--account"
+            className={`header__user--account${account ? " active" : ""}`}
             onClick={() => dispatch(toggleAccount())}
+            ref={ref}
           >
             <div className="header__user--account__icon">
               {isLoggedIn ? (
@@ -162,28 +176,25 @@ const Header = (props) => {
             <div className="header__user--account__dropdown-icon">
               <i className="fas fa-caret-down"></i>
             </div>
+            <ul className={"header__user--account__dropdown"}>
+              {username ? (
+                <>
+                  <Link
+                    onClick={() => dispatch(toggleAccount())}
+                    className="header__user--account__dropdown__account"
+                    to="/account"
+                  >
+                    <li>My Account ({username})</li>
+                  </Link>
+                  <li>
+                    <a href="/auth/logout">Logout</a>
+                  </li>
+                </>
+              ) : (
+                <li onClick={onOpenModal}>Login / Signup</li>
+              )}
+            </ul>
           </div>
-          <ul
-            className={`header__user--dropdown${account ? " active" : ""}`}
-            ref={ref}
-          >
-            {username ? (
-              <>
-                <Link
-                  onClick={() => dispatch(toggleAccount())}
-                  className="header__user--dropdown__account"
-                  to="/account"
-                >
-                  <li>My Account ({username})</li>
-                </Link>
-                <li>
-                  <a href="/auth/logout">Logout</a>
-                </li>
-              </>
-            ) : (
-              <li onClick={onOpenModal}>Login / Signup</li>
-            )}
-          </ul>
         </div>
       </div>
       <Auth open={open} onCloseModal={onCloseModal} />

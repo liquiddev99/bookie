@@ -298,6 +298,7 @@
 .header__user--account {
   padding: 0 1rem;
   margin-right: 2rem;
+  position: relative;
 }
 
 .header__user--account__icon {
@@ -319,6 +320,69 @@
   .header__user--account__icon {
     margin-right: 0;
   }
+}
+
+.header__user--account__dropdown {
+  position: absolute;
+  color: black;
+  list-style-type: none;
+  padding: 2rem 4rem 2rem 2rem;
+  font-size: 1.2rem;
+  background-color: white;
+  top: 100%;
+  right: 1rem;
+  border-radius: 0.5rem;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: all 0.5s;
+  z-index: 3;
+}
+
+@media screen and (max-width: 430px) {
+  .header__user--account__dropdown {
+    width: 25rem;
+    text-align: center;
+    padding: 1rem;
+  }
+}
+
+.header__user--account__dropdown li {
+  padding-bottom: 2rem;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.header__user--account__dropdown li a {
+  text-decoration: none;
+  color: black;
+}
+
+.header__user--account__dropdown li a:hover {
+  color: #0ab3a3;
+}
+
+@media screen and (max-width: 430px) {
+  .header__user--account__dropdown li {
+    padding-bottom: 1rem;
+  }
+}
+
+.header__user--account__dropdown li:hover {
+  color: #0ab3a3;
+}
+
+.header__user--account__dropdown__account {
+  color: black;
+  text-decoration: none;
+}
+
+.header__user--account.active .header__user--account__dropdown {
+  transform: scaleY(100%);
+}
+
+.header__user--account:hover {
+  color: #0ab3a3;
+  background-color: white;
 }
 
 .header__user--cart {
@@ -393,69 +457,6 @@
   .header__user--img-right {
     display: none;
   }
-}
-
-.header__user--account:hover {
-  color: #0ab3a3;
-  background-color: white;
-}
-
-.header__user--dropdown {
-  position: absolute;
-  color: black;
-  list-style-type: none;
-  padding: 2rem 4rem 2rem 2rem;
-  font-size: 1.2rem;
-  background-color: white;
-  top: 100%;
-  right: 1rem;
-  border-radius: 0.5rem;
-  transform: scaleY(0);
-  transform-origin: top;
-  transition: all 0.5s;
-  z-index: 3;
-}
-
-@media screen and (max-width: 430px) {
-  .header__user--dropdown {
-    width: 25rem;
-    text-align: center;
-    padding: 1rem;
-  }
-}
-
-.header__user--dropdown li {
-  padding-bottom: 2rem;
-  transition: all 0.2s;
-  cursor: pointer;
-}
-
-.header__user--dropdown li a {
-  text-decoration: none;
-  color: black;
-}
-
-.header__user--dropdown li a:hover {
-  color: #0ab3a3;
-}
-
-@media screen and (max-width: 430px) {
-  .header__user--dropdown li {
-    padding-bottom: 1rem;
-  }
-}
-
-.header__user--dropdown li:hover {
-  color: #0ab3a3;
-}
-
-.header__user--dropdown__account {
-  color: black;
-  text-decoration: none;
-}
-
-.header__user--dropdown.active {
-  transform: scaleY(100%);
 }
 
 .side-nav {
@@ -1776,6 +1777,7 @@
   border-radius: 0.5rem;
   transform: scaleY(0);
   transition: all 0.3s;
+  z-index: 3;
 }
 
 .books__sort--limit__option--link {
@@ -2435,7 +2437,7 @@
 }
 
 .checkout__pay--button:hover {
-  scale: 1.05;
+  transform: scale(1.05);
 }
 
 .checkout__empty {
