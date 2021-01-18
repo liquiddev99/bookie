@@ -305,7 +305,6 @@
 .header__user--account__icon {
   font-size: 2.5rem;
   margin-right: 1rem;
-  cursor: pointer;
 }
 
 @media screen and (max-width: 1000px) {

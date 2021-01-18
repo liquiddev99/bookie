@@ -1,9 +1,9 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { debounce } from "lodash";
 import { Link, withRouter } from "react-router-dom";
 
-import { toggleSidebar, toggleAccount } from "../../features/ui/uiSlice";
+import { toggleSidebar } from "../../features/ui/uiSlice";
 import { searchBooks } from "../../features/books/booksSlice";
 import { fetchUser } from "../../features/user/userSlice";
 
@@ -15,13 +15,13 @@ const Header = (props) => {
   const { username, thumbnail, cart, isLoggedIn } = useSelector(
     (state) => state.user
   );
-  const [account, setAccount] = useState(false);
+  const [activeAccount, setActiveAccount] = useState(false);
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
 
   const onOpenModal = () => {
     setOpen(true);
-    setAccount(false);
+    setActiveAccount(false);
   };
   const onCloseModal = () => {
     setOpen(false);
@@ -52,23 +52,23 @@ const Header = (props) => {
 
   // When click outside, close the account dropdown
   const handleClick = () => {
-    setAccount(!account);
+    setActiveAccount(!activeAccount);
   };
   const ref = useRef();
-  const handleClickOutSide = (e) => {
+  const handleClickOutSideAccount = (e) => {
     if (
       ref.current.classList.contains("active") &&
       !ref.current.contains(e.target)
     ) {
-      setAccount(false);
+      setActiveAccount(false);
       console.log("dispatch");
     }
   };
   useEffect(() => {
-    document.addEventListener("click", handleClickOutSide);
+    document.addEventListener("click", handleClickOutSideAccount);
     dispatch(fetchUser());
     return () => {
-      document.removeEventListener("click", handleClickOutSide);
+      document.removeEventListener("click", handleClickOutSideAccount);
     };
   }, [dispatch]);
 
@@ -152,7 +152,7 @@ const Header = (props) => {
           ) : null}
 
           <div
-            className={`header__user--account${account ? " active" : ""}`}
+            className={`header__user--account${activeAccount ? " active" : ""}`}
             onClick={handleClick}
             ref={ref}
           >

@@ -14,6 +14,6 @@ const uiSlice = createSlice({
   },
 });
 
-export const { toggleSidebar, toggleAccount } = uiSlice.actions;
+export const { toggleSidebar } = uiSlice.actions;
 
 export default uiSlice.reducer;

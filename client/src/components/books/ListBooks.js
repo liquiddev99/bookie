@@ -7,27 +7,27 @@ import SkeletonBook from "../skeleton/SkeletonBook";
 const Book = React.lazy(() => import("./Book"));
 
 const ListBooks = (props) => {
-  const [active, setActive] = useState(false);
+  const [activeLimit, setActiveLimit] = useState(false);
   const handleClick = () => {
-    setActive(!active);
+    setActiveLimit(!activeLimit);
   };
 
   const { status, listBooks, p, numbers, message, limit, q } = props;
   const path = props.location.pathname;
 
   const ref = useRef();
-  const handleClickOutside = (e) => {
+  const handleClickOutsideLimit = (e) => {
     if (
       ref.current.classList.contains("active") &&
       !ref.current.contains(e.target)
     ) {
-      setActive(!active);
+      setActiveLimit(!activeLimit);
     }
   };
   useEffect(() => {
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener("click", handleClickOutsideLimit);
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("click", handleClickOutsideLimit);
     };
   });
   return (
@@ -35,7 +35,7 @@ const ListBooks = (props) => {
       {status === "success" && (
         <div className="books__sort">
           <div
-            className={`books__sort--limit${active ? " active" : ""}`}
+            className={`books__sort--limit${activeLimit ? " active" : ""}`}
             onClick={handleClick}
             ref={ref}
           >
