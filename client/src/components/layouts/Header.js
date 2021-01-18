@@ -31,24 +31,16 @@ const Header = (props) => {
     .current;
   const handleChange = (e) => {
     setInput(e.target.value);
-    console.log(e.target.value);
     debouncedSearch(e.target.value);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(input);
     props.history.push(`/books/search?q=${input}`);
     clearInput();
   };
   const clearInput = () => {
     setInput("");
   };
-
-  // Toogle Account Dropdown
-  // const toggleAccount = () => {
-  //   setAccount(!account);
-  //   dispatch(clearStatus());
-  // };
 
   // When click outside, close the account dropdown
   const handleClick = () => {

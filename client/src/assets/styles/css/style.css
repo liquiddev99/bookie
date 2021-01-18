@@ -377,7 +377,7 @@
 }
 
 .header__user--account.active .header__user--account__dropdown {
-  transform: scaleY(100%);
+  transform: scaleY(1);
 }
 
 .header__user--account:hover {
