@@ -15,13 +15,13 @@ const Header = (props) => {
   const { username, thumbnail, cart, isLoggedIn } = useSelector(
     (state) => state.user
   );
-  const { account } = useSelector((state) => state.ui);
+  const [account, setAccount] = useState(false);
   const [input, setInput] = useState("");
   const [open, setOpen] = useState(false);
 
   const onOpenModal = () => {
     setOpen(true);
-    dispatch(toggleAccount());
+    setAccount(false);
   };
   const onCloseModal = () => {
     setOpen(false);
@@ -52,19 +52,17 @@ const Header = (props) => {
 
   // When click outside, close the account dropdown
   const handleClick = () => {
-    dispatch(toggleAccount());
+    setAccount(!account);
   };
   const ref = useRef();
   const handleClickOutSide = (e) => {
     if (
       ref.current.classList.contains("active") &&
-      !ref.current.contains(e.target) &&
-      account
+      !ref.current.contains(e.target)
     ) {
-      dispatch(toggleAccount());
+      setAccount(false);
       console.log("dispatch");
     }
-    console.log(e.target);
   };
   useEffect(() => {
     document.addEventListener("click", handleClickOutSide);
@@ -72,7 +70,7 @@ const Header = (props) => {
     return () => {
       document.removeEventListener("click", handleClickOutSide);
     };
-  }, [dispatch, account]);
+  }, [dispatch]);
 
   return (
     <header id="header">

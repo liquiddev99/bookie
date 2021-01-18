@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   sideBar: false,
-  account: false,
 };
 
 const uiSlice = createSlice({
@@ -11,9 +10,6 @@ const uiSlice = createSlice({
   reducers: {
     toggleSidebar(state) {
       state.sideBar = !state.sideBar;
-    },
-    toggleAccount(state) {
-      state.account = !state.account;
     },
   },
 });
