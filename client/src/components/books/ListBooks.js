@@ -8,7 +8,7 @@ const Book = React.lazy(() => import("./Book"));
 
 const ListBooks = (props) => {
   const [activeLimit, setActiveLimit] = useState(false);
-  const handleClick = () => {
+  const handleClickLimit = () => {
     setActiveLimit(!activeLimit);
   };
 
@@ -36,13 +36,13 @@ const ListBooks = (props) => {
         <div className="books__sort">
           <div
             className={`books__sort--limit${activeLimit ? " active" : ""}`}
-            onClick={handleClick}
+            onClick={handleClickLimit}
             ref={ref}
           >
             <p className="books__sort--limit__current">{`${limit} products`}</p>
             <ul
               className="books__sort--limit__option"
-              onMouseLeave={handleClick}
+              onMouseLeave={handleClickLimit}
             >
               <Link
                 to={`${path}?${q ? "q=" : ""}${q ? q : ""}${

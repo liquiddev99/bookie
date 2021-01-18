@@ -43,7 +43,7 @@ const Header = (props) => {
   };
 
   // When click outside, close the account dropdown
-  const handleClick = () => {
+  const handleClickAccount = () => {
     setActiveAccount(!activeAccount);
   };
   const ref = useRef();
@@ -145,7 +145,7 @@ const Header = (props) => {
 
           <div
             className={`header__user--account${activeAccount ? " active" : ""}`}
-            onClick={handleClick}
+            onClick={handleClickAccount}
             ref={ref}
           >
             <div className="header__user--account__icon">
@@ -162,7 +162,7 @@ const Header = (props) => {
               {username ? (
                 <>
                   <Link
-                    onClick={handleClick}
+                    onClick={handleClickAccount}
                     className="header__user--account__dropdown__account"
                     to="/account"
                   >
