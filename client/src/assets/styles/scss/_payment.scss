@@ -29,12 +29,22 @@
         display: block;
         margin-bottom: 2rem;
         padding: 0.5rem;
+        width: 35%;
+        @include tablet {
+          width: 45%;
+        }
+        @include small-tablet {
+          width: 60%;
+        }
+        @include mobile {
+          width: 80%;
+        }
       }
       &__country,
       &__region {
         display: block;
         margin-bottom: 1rem;
-        width: 30%;
+        width: 35%;
         @include small-tablet {
           width: 60%;
         }

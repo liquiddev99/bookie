@@ -2293,6 +2293,13 @@
   font-size: calc(0.8vw + 0.8rem);
 }
 
+@media screen and (max-width: 430px) {
+  .account__profile {
+    width: 100%;
+    font-size: calc(1.2rem + 1vw);
+  }
+}
+
 .account__profile p {
   margin: 1rem 0;
 }
@@ -2306,6 +2313,10 @@
 
 .account__profile form {
   margin-bottom: 2rem;
+}
+
+.account__profile form #file {
+  margin-bottom: 1rem;
 }
 
 .account__profile--success {
@@ -2326,8 +2337,14 @@
   flex-direction: column;
 }
 
+@media screen and (max-width: 768px) {
+  .checkout {
+    width: 100%;
+  }
+}
+
 .checkout__title {
-  margin: 1.5rem 0;
+  margin: 1.5rem 0 0.5rem 0;
   font-size: calc(1.6rem + 0.8vw);
 }
 
@@ -2554,12 +2571,31 @@
   display: block;
   margin-bottom: 2rem;
   padding: 0.5rem;
+  width: 35%;
+}
+
+@media screen and (max-width: 1000px) {
+  .payment__delivery--address input {
+    width: 45%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .payment__delivery--address input {
+    width: 60%;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .payment__delivery--address input {
+    width: 80%;
+  }
 }
 
 .payment__delivery--address__country, .payment__delivery--address__region {
   display: block;
   margin-bottom: 1rem;
-  width: 30%;
+  width: 35%;
 }
 
 @media screen and (max-width: 768px) {
