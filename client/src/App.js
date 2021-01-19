@@ -13,12 +13,14 @@ import Account from "./components/user/Account";
 import Checkout from "./components/books/Checkout";
 import Payment from "./components/books/Payment";
 import Notification from "./components/layouts/Notification";
+import AutoScrollToTop from "./components/layouts/AutoScrollToTop";
 
 function App(props) {
   return (
     <div className="App">
       <NavBar />
       <main className={`main${!props.sideBar ? " center" : ""}`}>
+        <AutoScrollToTop />
         <Switch>
           <Route path="/books/genre/:genre" component={BooksGenre} />
           <Route path="/books/search" component={BooksSearch} />

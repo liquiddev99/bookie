@@ -6,6 +6,7 @@ import SkeletonBook from "../skeleton/SkeletonBook";
 import { fetchBook, fetchListBooks } from "../../features/books/booksSlice";
 import Book from "./Book";
 import { addToCart } from "../../features/user/userSlice";
+import { toggleToast } from "../../features/ui/uiSlice";
 
 const NextArrow = (props) => {
   const { className, onClick } = props;
@@ -72,6 +73,36 @@ const BookDetail = (props) => {
   );
 
   const [amount, setAmount] = useState(1);
+  const [btnText, setBtnText] = useState("Add to Cart");
+  const handleAddToCart = (id, amount) => {
+    setBtnText("Adding...");
+    dispatch(addToCart({ id, amount })).then((unwrapResult) => {
+      setBtnText("Add to cart");
+      if (unwrapResult.meta.requestStatus === "fulfilled") {
+        dispatch(
+          toggleToast({
+            display: true,
+            type: "success",
+            msg: "Added product to Cart",
+          })
+        );
+        setTimeout(() => {
+          dispatch(toggleToast({ display: false, type: "", msg: "" }));
+        }, 4000);
+      } else {
+        dispatch(
+          toggleToast({
+            display: true,
+            type: "failure",
+            msg: "Can't add product to cart, please try later",
+          })
+        );
+        setTimeout(() => {
+          dispatch(toggleToast({ display: false, type: "", msg: "" }));
+        }, 4000);
+      }
+    });
+  };
   const add = () => {
     setAmount(amount + 1);
   };
@@ -136,9 +167,9 @@ const BookDetail = (props) => {
 
               <button
                 className="book-detail__content--add"
-                onClick={() => dispatch(addToCart({ id, amount }))}
+                onClick={() => handleAddToCart(id, amount)}
               >
-                Add to Cart
+                {btnText}
               </button>
             </div>
           </>
