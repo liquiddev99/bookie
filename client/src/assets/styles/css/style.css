@@ -2786,4 +2786,49 @@
 .payment__confirm--checkout__button:hover {
   scale: 1.05;
 }
+
+.notification-wrapper {
+  position: fixed;
+  top: 7vh;
+  right: 5vw;
+  width: 20vw;
+  background-color: #02c50a;
+  border-radius: 1rem;
+  transition: all 0.5s;
+  opacity: 0.9;
+}
+
+@media screen and (max-width: 768px) {
+  .notification-wrapper {
+    width: 35vw;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .notification-wrapper {
+    width: 45vw;
+  }
+}
+
+.notification-wrapper .notification {
+  display: flex;
+  align-items: center;
+  padding: 2rem 1rem;
+  color: white;
+}
+
+@media screen and (max-width: 768px) {
+  .notification-wrapper .notification {
+    padding: 1rem;
+  }
+}
+
+.notification-wrapper .notification__icon {
+  font-size: calc(1.5rem + 0.5vw);
+  margin-right: 1rem;
+}
+
+.notification-wrapper .notification__text {
+  font-size: calc(1.2rem + 0.2vw);
+}
 /*# sourceMappingURL=style.css.map */

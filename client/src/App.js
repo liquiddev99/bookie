@@ -12,6 +12,7 @@ import BookDetail from "./components/books/BookDetail";
 import Account from "./components/user/Account";
 import Checkout from "./components/books/Checkout";
 import Payment from "./components/books/Payment";
+import Notification from "./components/layouts/Notification";
 
 function App(props) {
   return (
@@ -30,6 +31,7 @@ function App(props) {
       </main>
       <Footer />
       <ScrollToTop />
+      <Notification />
     </div>
   );
 }

@@ -1,13 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import { addToCart } from "../../features/user/userSlice";
+import { toggleToast } from "../../features/ui/uiSlice";
 
 const Book = (props) => {
   const dispatch = useDispatch();
   const id = props.id;
   const amount = 1;
+  const [btnText, setBtnText] = useState("Add to cart");
+
+  const handleAddToCart = (id, amount) => {
+    setBtnText("Adding...");
+    dispatch(addToCart({ id, amount })).then((unwrapResult) => {
+      setBtnText("Add to cart");
+      if (unwrapResult.meta.requestStatus === "fulfilled") {
+        dispatch(
+          toggleToast({
+            display: true,
+            type: "success",
+            msg: "Added product to Cart",
+          })
+        );
+        setTimeout(() => {
+          dispatch(toggleToast({ display: false, type: "", msg: "" }));
+        }, 4000);
+      } else {
+        dispatch(
+          toggleToast({
+            display: true,
+            type: "failure",
+            msg: "Can't add product to cart, please try later",
+          })
+        );
+        setTimeout(() => {
+          dispatch(toggleToast({ display: false, type: "", msg: "" }));
+        }, 4000);
+      }
+    });
+  };
 
   return (
     <div className="book">
@@ -30,10 +62,10 @@ const Book = (props) => {
         </div>
         {props.hideButton ? null : (
           <button
-            onClick={() => dispatch(addToCart({ id, amount }))}
+            onClick={() => handleAddToCart(id, amount)}
             className="book__content--button"
           >
-            Add to cart
+            {btnText}
           </button>
         )}
       </div>
