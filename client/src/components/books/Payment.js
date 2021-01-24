@@ -14,7 +14,6 @@ const Payment = () => {
     district: "",
     ward: "",
   });
-  console.log(username, user);
 
   const handleChange = (input) => (e) => {
     setUser({ ...user, [input]: e.target.value });

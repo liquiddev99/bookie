@@ -25,7 +25,7 @@ const Book = (props) => {
         );
         setTimeout(() => {
           dispatch(toggleToast({ display: false, type: "", msg: "" }));
-        }, 4000);
+        }, 3500);
       } else {
         dispatch(
           toggleToast({
@@ -36,7 +36,7 @@ const Book = (props) => {
         );
         setTimeout(() => {
           dispatch(toggleToast({ display: false, type: "", msg: "" }));
-        }, 4000);
+        }, 3500);
       }
     });
   };

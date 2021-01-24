@@ -148,7 +148,7 @@
     }
     p {
       margin: 0.5rem 2rem;
-      font-size: calc(1rem + 0.5vw);
+      font-size: calc(1.3rem + 0.5vw);
     }
 
     &--money {
@@ -162,7 +162,7 @@
       &__final {
         p:nth-child(2) {
           color: #f9971e;
-          font-size: calc(1.2rem + 0.5vw);
+          font-size: calc(1.6rem + 0.5vw);
           font-weight: bold;
         }
       }

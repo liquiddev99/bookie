@@ -124,9 +124,9 @@ const Header = (props) => {
             : null}
         </div>
         <div className="header__logo">
-          <a href="/">
+          <Link to="/">
             <h1 className="header__logo--content">Bookie</h1>
-          </a>
+          </Link>
         </div>
         <div className="header__user">
           <Link to="/checkout" className="header__user--cart">
