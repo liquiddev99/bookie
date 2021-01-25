@@ -14,11 +14,11 @@ const BestSeller = () => {
       </div>
       <div className="best-seller__list">
         <Book
-          src="https://cdn0.fahasa.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/t/_/t_n-th_-5.jpg"
-          title="Tận Thế Nếu Không Bận, Anh Cứu Chúng Em Nhé? - Tập 5"
-          price={76.5}
-          old_price={90}
-          id="5f91cb78bb017357906536c8"
+          src="https://cdn0.fahasa.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/h/o/hoi-chung-tuoi-thanh-xuan-tap-1_1.jpg"
+          title="[Bản Giới Hạn] Hội Chứng Tuổi Thanh Xuân - Tập 1 - Tặng Kèm Bookmark + Postcard PVC"
+          price={99.75}
+          old_price={105}
+          id="5f91cb78bb017357906536c9"
         />
         <Book
           src="https://cdn0.fahasa.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/i/m/image_193617.jpg"
@@ -28,11 +28,11 @@ const BestSeller = () => {
           id="5f93a87d3678c00cd934a5a1"
         />
         <Book
-          src="https://cdn0.fahasa.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/k/h/khi-hikaru-c_n-tr_n_1.jpg"
-          title="Khi Hikaru còn trên thế gian này"
-          price={63}
+          src="https://cdn0.fahasa.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/t/_/t_n-th_-5.jpg"
+          title="Tận Thế Nếu Không Bận, Anh Cứu Chúng Em Nhé? - Tập 5"
+          price={76.5}
           old_price={90}
-          id="5f91cb78bb0173579065372f"
+          id="5f91cb78bb017357906536c8"
         />
         <Book
           src="https://cdn0.fahasa.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/u/n/untitled_1_2.jpg"

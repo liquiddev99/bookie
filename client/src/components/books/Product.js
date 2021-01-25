@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { updateCart, deleteCart } from "../../features/user/userSlice";
+import { toggleToast } from "../../features/ui/uiSlice";
 
 const Product = (props) => {
   const dispatch = useDispatch();
@@ -26,12 +27,42 @@ const Product = (props) => {
     if (!e.target.value) {
       setAmount(props.amount);
     }
-    dispatch(updateCart({ id, amount }));
+    dispatch(updateCart({ id, amount })).then((unwrapResult) => {
+      if (unwrapResult.meta.requestStatus === "fulfilled") {
+        dispatch(
+          toggleToast({
+            display: true,
+            type: "success",
+            msg: "Updated Cart",
+          })
+        );
+        setTimeout(() => {
+          dispatch(toggleToast({ display: false, type: "", msg: "" }));
+        }, 2500);
+      }
+    });
+  };
+
+  const deleteProduct = (id) => {
+    dispatch(deleteCart(id)).then((unwrapResult) => {
+      if (unwrapResult.meta.requestStatus === "fulfilled") {
+        dispatch(
+          toggleToast({
+            display: true,
+            type: "success",
+            msg: "Removed Product",
+          })
+        );
+        setTimeout(() => {
+          dispatch(toggleToast({ display: false, type: "", msg: "" }));
+        }, 2500);
+      }
+    });
   };
 
   return (
     <div className="checkout__product">
-      <i className="fas fa-times" onClick={() => dispatch(deleteCart(id))}></i>
+      <i className="fas fa-times" onClick={() => deleteProduct(id)}></i>
       <Link to={`/book/${id}`} className="checkout__product--img">
         <img src={props.imgURL} alt="Product" />
       </Link>

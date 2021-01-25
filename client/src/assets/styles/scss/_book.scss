@@ -33,10 +33,14 @@
     }
     &--name {
       font-size: calc(1.2rem + 0.3vw);
-      overflow: hidden;
       max-height: calc(2rem + 2vw);
       min-height: calc(2rem + 2vw);
       line-height: calc(1rem + 1vw);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 2; /* number of lines to show */
+      -webkit-box-orient: vertical;
     }
     &--price {
       color: #f9971e;
