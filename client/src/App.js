@@ -14,6 +14,7 @@ import Checkout from "./components/books/Checkout";
 import Payment from "./components/books/Payment";
 import Notification from "./components/layouts/Notification";
 import AutoScrollToTop from "./components/layouts/AutoScrollToTop";
+import NotFound from "./components/layouts/NotFound";
 
 function App(props) {
   return (
@@ -29,6 +30,7 @@ function App(props) {
           <Route path="/checkout/payment" component={Payment} />
           <Route path="/checkout" component={Checkout} exact />
           <Route path="/" component={Landing} exact />
+          <Route path="*" component={NotFound} />
         </Switch>
       </main>
       <Footer />

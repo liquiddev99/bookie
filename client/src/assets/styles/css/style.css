@@ -2831,4 +2831,33 @@
 .notification-wrapper .notification__text {
   font-size: calc(1.2rem + 0.2vw);
 }
+
+.not-found {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.not-found h1 {
+  font-size: calc(2rem + 1vw);
+  margin-bottom: 2rem;
+}
+
+.not-found p {
+  font-size: calc(1.5rem + 1vw);
+  margin-bottom: 2rem;
+}
+
+.not-found__link {
+  text-decoration: none;
+  font-size: calc(1.2rem + 1vw);
+  color: black;
+  border-radius: 2rem;
+  background-color: #0ab3a3;
+  padding: 0.7rem 2rem;
+}
+
+.not-found__link:hover {
+  color: white;
+}
 /*# sourceMappingURL=style.css.map */
