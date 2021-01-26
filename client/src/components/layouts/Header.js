@@ -133,7 +133,7 @@ const Header = (props) => {
             <div className="header__user--cart__icon">
               <i className="fas fa-shopping-cart"></i>
             </div>
-            {cart.length ? (
+            {cart && cart.length ? (
               <div className="header__user--cart__quantity">{cart.length}</div>
             ) : null}
           </Link>

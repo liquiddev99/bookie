@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -8,6 +8,7 @@ import { toggleToast } from "../../features/ui/uiSlice";
 const Product = (props) => {
   const dispatch = useDispatch();
   const id = props.id;
+  const [inpValue, setInpValue] = useState(props.amount);
   const [amount, setAmount] = useState(props.amount);
 
   const formatter = new Intl.NumberFormat("vi-VN", {
@@ -17,30 +18,24 @@ const Product = (props) => {
 
   const handleChange = (e) => {
     if (isNaN(e.target.value)) {
-      setAmount(props.amount);
+      setInpValue(amount);
     } else {
-      setAmount(e.target.value);
+      setInpValue(e.target.value);
     }
   };
 
   const updateAmount = (e) => {
-    if (!e.target.value) {
-      setAmount(props.amount);
+    if (!e.target.value || parseInt(e.target.value) === 0) {
+      setInpValue(parseInt(amount));
+      console.log("a");
+    } else {
+      setAmount(parseInt(e.target.value));
+      setInpValue(parseInt(e.target.value));
     }
-    dispatch(updateCart({ id, amount })).then((unwrapResult) => {
-      if (unwrapResult.meta.requestStatus === "fulfilled") {
-        dispatch(
-          toggleToast({
-            display: true,
-            type: "success",
-            msg: "Updated Cart",
-          })
-        );
-        setTimeout(() => {
-          dispatch(toggleToast({ display: false, type: "", msg: "" }));
-        }, 2500);
-      }
-    });
+    // setTimeout(() => {
+    //   console.log(amount, inpValue);
+
+    // }, 0);
   };
 
   const deleteProduct = (id) => {
@@ -60,6 +55,29 @@ const Product = (props) => {
     });
   };
 
+  const loaded = useRef(true);
+  useEffect(() => {
+    if (loaded.current) {
+      loaded.current = false;
+      return;
+    }
+    dispatch(updateCart({ id, amount })).then((unwrapResult) => {
+      console.log(unwrapResult.payload);
+      if (unwrapResult.meta.requestStatus === "fulfilled") {
+        dispatch(
+          toggleToast({
+            display: true,
+            type: "success",
+            msg: "Updated Cart",
+          })
+        );
+        setTimeout(() => {
+          dispatch(toggleToast({ display: false, type: "", msg: "" }));
+        }, 2500);
+      }
+    });
+  }, [dispatch, id, amount]);
+
   return (
     <div className="checkout__product">
       <i className="fas fa-times" onClick={() => deleteProduct(id)}></i>
@@ -78,13 +96,13 @@ const Product = (props) => {
       <div className="checkout__product--amount">
         <input
           type="text"
-          value={amount}
+          value={inpValue}
           onChange={handleChange}
           onBlur={updateAmount}
         />
         <p className="checkout__product--amount__total">Total:</p>
         <p className="checkout__product--amount__money">
-          {formatter.format(parseFloat(amount * props.price) * 1000)}
+          {formatter.format(parseFloat(inpValue * props.price) * 1000)}
         </p>
       </div>
     </div>

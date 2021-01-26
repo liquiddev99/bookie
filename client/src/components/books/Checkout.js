@@ -6,12 +6,11 @@ import Product from "./Product";
 
 const Checkout = () => {
   const { cart } = useSelector((state) => state.user);
-  console.log(cart);
 
   return (
     <div className="checkout">
       <h1 className="checkout__title">Cart</h1>
-      {cart.length
+      {cart && cart.length
         ? cart.map((product) => (
             <Product
               id={product._id}
