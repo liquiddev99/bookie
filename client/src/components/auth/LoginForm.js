@@ -13,12 +13,15 @@ const LoginForm = () => {
     email: "",
     password: "",
   });
+  const [btnText, setBtnText] = useState("Login");
   const handleChange = (name) => (e) => {
     setUserData({ ...userData, [name]: e.target.value });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    setBtnText("Logging...");
     dispatch(login(userData)).then((unwrapResult) => {
+      setBtnText("Login");
       if (unwrapResult.meta.requestStatus === "fulfilled") {
         history.go(0);
       }
@@ -51,7 +54,7 @@ const LoginForm = () => {
         </div>
         {errorMsg ? <p className="auth__form--error">{errorMsg}</p> : null}
         <button type="submit" className="auth__form--button">
-          Login
+          {btnText}
         </button>
       </form>
 

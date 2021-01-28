@@ -172,7 +172,7 @@ const Aside = () => {
                 </Link>
               </li>
               <li>
-                <Link to="#" className="sub-menu__link">
+                <Link to="books/genre/mentality" className="sub-menu__link">
                   Mentality
                 </Link>
               </li>

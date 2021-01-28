@@ -47,7 +47,7 @@ module.exports = crawl = async (genre) => {
   for (var p = 1; p <= 3; p++) {
     let link = await bookScrapev2(
       page,
-      `https://www.fahasa.com/sach-trong-nuoc/kinh-te-chinh-tri-phap-ly/phan-tich-kinh-te.html?order=num_orders&limit=48&p=${p}`
+      `https://www.fahasa.com/sach-trong-nuoc/tam-ly-ky-nang-song/tam-ly.html?order=num_orders&limit=48&p=${p}`
     );
     links = links.concat(link);
   }

@@ -19,15 +19,20 @@ const Product = (props) => {
   const handleChange = (e) => {
     if (isNaN(e.target.value)) {
       setInpValue(amount);
+    } else if (parseInt(e.target.value) > 99) {
+      setInpValue(99);
     } else {
       setInpValue(e.target.value);
     }
   };
 
   const updateAmount = (e) => {
-    if (!e.target.value || parseInt(e.target.value) === 0) {
+    if (
+      !e.target.value ||
+      parseInt(e.target.value) === 0 ||
+      parseInt(e.target.value) > 99
+    ) {
       setInpValue(parseInt(amount));
-      console.log("a");
     } else {
       setAmount(parseInt(e.target.value));
       setInpValue(parseInt(e.target.value));
