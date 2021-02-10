@@ -2688,6 +2688,13 @@
   font-size: calc(1.1rem + 0.3vw);
   margin-bottom: 0.5rem;
   margin-right: 1rem;
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .payment__info--product__info--money__price, .payment__info--product__info--money__amount {
+    display: block;
+  }
 }
 
 .payment__info--product__info--money__total {

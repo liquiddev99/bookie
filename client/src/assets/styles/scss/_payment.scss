@@ -104,6 +104,10 @@
             font-size: calc(1.1rem + 0.3vw);
             margin-bottom: 0.5rem;
             margin-right: 1rem;
+            display: none;
+            @include small-tablet {
+              display: block;
+            }
           }
           &__total {
             font-size: calc(1.1rem + 0.3vw);

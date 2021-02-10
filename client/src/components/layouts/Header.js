@@ -35,8 +35,10 @@ const Header = (props) => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    props.history.push(`/books/search?q=${input}`);
-    clearInput();
+    if (input) {
+      props.history.push(`/books/search?q=${input}`);
+      clearInput();
+    }
   };
   const clearInput = () => {
     setInput("");
